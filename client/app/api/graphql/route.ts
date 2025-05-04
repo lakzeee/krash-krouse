@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { createYoga } from 'graphql-yoga';
-import { buildSchema, Query, Resolver } from 'type-graphql';
+import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
 import { GraphQLContext } from '@/server/context';
 import type { NextRequest } from 'next/server';

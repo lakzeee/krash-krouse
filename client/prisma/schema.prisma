@@ -12,6 +12,29 @@ datasource db {
   url       = env("DATABASE_URL")
 }
 
+enum ChapterStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  FINISHED
+}
+
+enum QuizType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
+
+enum QuizAttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum LLMProvider {
+  GOOGLE
+  DEEPSEEK
+}
+
 model User {
   id                String         @id @unique
   email             String         @unique
@@ -21,5 +44,172 @@ model User {
   lastSignInAt      DateTime?      @map("last_sign_in_at")
   createdAt         DateTime       @default(now()) @map("created_at")
   updatedAt         DateTime       @updatedAt @map("updated_at")
+
+  courses           Course[]       // Courses created by this user
+  quizAttempts      QuizAttempt[]  // Quiz attempts made by this user
+  conversations     Conversation[] // Conversations initiated by this user (if tracking this directly)
   @@map("users")
+}
+
+model Conversation {
+  id            String        @id @default(uuid())
+  userId        String?       // Optional: Link directly to the user who initiated it
+  courseId      String?       @unique // Optional: Link to the course generated from this conversation
+  systemPrompt  String?       @map("system_prompt") @db.Text
+  aiModelId     String?       @map("ai_model_id") // Foreign key to the AIModel used
+  lastUpdate    DateTime      @updatedAt @map("last_update")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  aiModel       LLModel?      @relation(fields: [aiModelId], references: [id], onDelete: SetNull) // Relation to the AIModel table
+  course        Course?       // Relation established by Course.conversationId
+  messages      Message[]     // History of messages in this conversation
+
+  @@map("conversations")
+}
+
+model LLModel {
+  id             String  @id @default(uuid())
+  provider       LLMProvider
+  modelName      String  @unique @map("model_name")
+  displayName    String? @map("display_name")
+  contextWindow  Int?    @map("context_window")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  conversations  Conversation[] // Conversations that used this model
+
+  @@map("ai_models")
+}
+
+
+// Message model representing a single turn in a conversation
+model Message {
+  id             String        @id @default(uuid())
+  conversationId String        @map("conversation_id")
+  isUser         Boolean       @map("is_user") // True for user message, False for model response
+  parts          Json          // Content of the message (e.g., [{ "text": "..." }])
+  timestamp      DateTime      @default(now())
+
+  // Relations
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, timestamp]) // Index for ordering messages
+  @@map("messages") // Renamed from "History" for clarity
+}
+
+// Course model representing a generated learning course
+model Course {
+  id             String        @id @default(uuid())
+  creatorId      String        @map("creator_id")
+  conversationId String?       @unique @map("conversation_id") // Link to the conversation that generated this course
+  topic          String        // The learning topic (e.g., "Calculus I")
+  goal           String        @db.Text // The user's learning goal
+  title          String?       // Title of the course
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  creator        User          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  chapters       Chapter[]     // Chapters/lessons within this course
+
+  @@map("courses")
+}
+
+// Chapter model representing a module or lesson within a course
+model Chapter {
+  id          String         @id @default(uuid())
+  courseId    String         @map("course_id")
+  title       String?        // Title of the chapter/lesson
+  order       Int            // Order of the chapter within the course
+  status      ChapterStatus  @default(NOT_STARTED)
+  objectives  String[]       // Learning objectives for this chapter
+  content     Json?          // Detailed lesson content (e.g., Markdown stored as JSON or string)
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  course      Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  quizzes     Quiz[]         // Quizzes associated with this chapter
+
+  @@unique([courseId, order]) // Ensure unique order within a course
+  @@map("chapters")
+}
+
+// Quiz model defining the structure of a quiz
+model Quiz {
+  id         String    @id @default(uuid())
+  chapterId  String    @map("chapter_id")
+  title      String?   // Optional title for the quiz
+  quizType   QuizType? @map("quiz_type") // Type of quiz (e.g., lesson check, reinforcement)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  chapter    Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  questions  Question[]    // Questions belonging to this quiz
+  attempts   QuizAttempt[] // Attempts made for this quiz
+
+  @@map("quizzes")
+}
+
+// Question model defining a single question within a quiz
+model Question {
+  id        String   @id @default(uuid())
+  quizId    String   @map("quiz_id")
+  order     Int      // Order of the question within the quiz
+  type      QuizType // Type of question (determines structure of options/answer)
+  text      String   @db.Text // The question text
+  options   Json?    // JSON array of options {option_id, text, isCorrect, reasoning?} - Nullable for short_answer
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  quiz      Quiz               @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  responses UserQuizResponse[] // User responses to this question
+
+  @@unique([quizId, order]) // Ensure unique order within a quiz
+  @@map("questions")
+}
+
+// QuizAttempt model tracking a user's attempt at a quiz
+model QuizAttempt {
+  id           String            @id @default(uuid())
+  userId       String            @map("user_id")
+  quizId       String            @map("quiz_id")
+  score        Float?            // Overall score (e.g., percentage 0.0 to 1.0)
+  status       QuizAttemptStatus @default(IN_PROGRESS)
+  startedAt    DateTime          @default(now()) @map("started_at")
+  completedAt  DateTime?         @map("completed_at")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz         Quiz              @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  responses    UserQuizResponse[]// Individual answers within this attempt
+
+  @@index([userId, quizId])
+  @@map("quiz_attempts")
+}
+
+// UserQuizResponse model tracking a user's answer to a specific question in an attempt
+model UserQuizResponse {
+  id            String      @id @default(uuid())
+  quizAttemptId String      @map("quiz_attempt_id")
+  questionId    String      @map("question_id")
+  userAnswer    Json        @map("user_answer") // User's submitted answer (structure depends on question type)
+  isCorrect     Boolean?    @map("is_correct") // Whether the answer was correct (null until graded)
+  submittedAt   DateTime?   @map("submitted_at") @default(now())
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  quizAttempt   QuizAttempt @relation(fields: [quizAttemptId], references: [id], onDelete: Cascade)
+  question      Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([quizAttemptId, questionId]) // Ensure only one response per question per attempt
+  @@map("user_quiz_responses")
 }

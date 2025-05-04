@@ -42,6 +42,18 @@ export async function POST(req: Request) {
   } else if (event.type === 'user.updated') {
     const { id, email_addresses, first_name, last_name, image_url, last_sign_in_at, updated_at } = event.data;
 
+    // Check if user exists before updating
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+      select: { id: true } // Only select id for efficiency
+    });
+
+    if (!existingUser) {
+      console.warn(`Skipping user.updated for user ${id}: User not found in database.`);
+      // Acknowledge webhook, but indicate user wasn't found locally
+      return new Response('OK - User not found', { status: 200 });
+    }
+
     const email = email_addresses?.[0]?.email_address;
 
     await prisma.user.update({
@@ -57,6 +69,19 @@ export async function POST(req: Request) {
     });
   } else if (event.type === 'user.deleted') {
     const { id } = event.data;
+
+    // Check if user exists before deleting
+    // Important if Clerk sends delete event even if create/sync failed previously
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+      select: { id: true }
+    });
+
+    if (!existingUser) {
+      console.warn(`Skipping user.deleted for user ${id}: User not found in database.`);
+      return new Response('OK - User not found', { status: 200 });
+    }
+
     await prisma.user.deleteMany({
       where: { id },
     });

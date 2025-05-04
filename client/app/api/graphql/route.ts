@@ -4,17 +4,12 @@ import { buildSchema, Query, Resolver } from 'type-graphql';
 import { prisma } from '@/services/prisma';
 import { GraphQLContext } from '@/server/context';
 import type { NextRequest } from 'next/server';
-
-@Resolver()
-class HelloResolver {
-  @Query(() => String)
-  hello() {
-    return 'Hello World!';
-  }
-}
+import { resolvers } from "@generated/type-graphql";
 
 const schema = await buildSchema({
-  resolvers: [HelloResolver],
+  // @ts-ignore
+  resolvers: [...resolvers],
+  validate: false,
 });
 
 const yoga = createYoga<{

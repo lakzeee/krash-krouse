@@ -7,7 +7,6 @@ import type { NextRequest } from 'next/server';
 import { resolvers } from "@generated/type-graphql";
 
 const schema = await buildSchema({
-  // @ts-ignore
   resolvers: [...resolvers],
   validate: false,
 });

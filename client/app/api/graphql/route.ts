@@ -1,10 +1,10 @@
-import 'reflect-metadata';
+import { auth } from '@clerk/nextjs/server';
 import { createYoga } from 'graphql-yoga';
+import type { NextRequest } from 'next/server';
+import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
-import type { NextRequest } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { CourseResolver,GraphQLContext } from '@/graphql';
+import { CourseResolver, GraphQLContext } from '@/graphql';
 
 const schema = await buildSchema({
   resolvers: [CourseResolver],
@@ -17,8 +17,8 @@ const yoga = createYoga<GraphQLContext>({
     const authResult = await auth();
     return { prisma, req: request, auth: authResult };
   },
-  graphqlEndpoint: '/api/graphql', 
-  fetchAPI: { Response, Request: Request }, 
+  graphqlEndpoint: '/api/graphql',
+  fetchAPI: { Response, Request: Request },
 });
 
 export async function GET(request: NextRequest) {

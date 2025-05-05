@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { IncomingMessage } from 'http';
-import { NextApiResponse } from 'next';
+import type { NextRequest } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 export interface GraphQLContext {
     prisma: PrismaClient;
-    req: IncomingMessage;
-    res: NextApiResponse;
+    req: NextRequest;
+    auth: Awaited<ReturnType<typeof auth>>;
 }

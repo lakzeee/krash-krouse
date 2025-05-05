@@ -2,24 +2,19 @@ import 'reflect-metadata';
 import { createYoga } from 'graphql-yoga';
 import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
-import { GraphQLContext } from '@/graphql/context';
 import type { NextRequest } from 'next/server';
-import { resolvers } from "@generated/type-graphql";
 import { auth } from '@clerk/nextjs/server';
+import { CourseResolver,GraphQLContext } from '@/graphql';
 
 const schema = await buildSchema({
-  resolvers: [...resolvers],
+  resolvers: [CourseResolver],
   validate: false,
 });
 
-const yoga = createYoga<{
-  req: NextRequest
-  auth: ReturnType<typeof auth>;
-} & GraphQLContext>({
+const yoga = createYoga<GraphQLContext>({
   schema,
   context: async ({ request }) => {
-    const authResult = auth();
-    console.log(await authResult);
+    const authResult = await auth();
     return { prisma, req: request, auth: authResult };
   },
   graphqlEndpoint: '/api/graphql', 

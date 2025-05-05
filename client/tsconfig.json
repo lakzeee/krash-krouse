@@ -34,9 +34,6 @@
       ],
       "@/services": [
         "./services/*"
-      ],
-      "@/server": [
-        "graphql/*"
       ]
     },
     "moduleResolution": "node",

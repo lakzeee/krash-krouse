@@ -2,9 +2,10 @@ import 'reflect-metadata';
 import { createYoga } from 'graphql-yoga';
 import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
-import { GraphQLContext } from '@/server/context';
+import { GraphQLContext } from '@/graphql/context';
 import type { NextRequest } from 'next/server';
 import { resolvers } from "@generated/type-graphql";
+import { auth } from '@clerk/nextjs/server';
 
 const schema = await buildSchema({
   resolvers: [...resolvers],
@@ -13,11 +14,16 @@ const schema = await buildSchema({
 
 const yoga = createYoga<{
   req: NextRequest
+  auth: ReturnType<typeof auth>;
 } & GraphQLContext>({
   schema,
-  context: ({ request }) => ({ prisma, req: request }), // Pass request to context if needed
-  graphqlEndpoint: '/api/graphql', // Recommended to keep for Yoga
-  fetchAPI: { Response, Request: Request }, // Ensure Yoga uses standard Fetch APIs
+  context: async ({ request }) => {
+    const authResult = auth();
+    console.log(await authResult);
+    return { prisma, req: request, auth: authResult };
+  },
+  graphqlEndpoint: '/api/graphql', 
+  fetchAPI: { Response, Request: Request }, 
 });
 
 export async function GET(request: NextRequest) {

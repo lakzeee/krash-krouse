@@ -7,8 +7,10 @@ import {
   ID,
   InputType,
   Field,
+  FieldResolver,
+  Root,
 } from 'type-graphql';
-import { Course } from '@generated/type-graphql';
+import { Course, Chapter } from '@generated/type-graphql';
 import type { GraphQLContext } from '../context';
 import { AuthenticationError, NotFoundError, ForbiddenError } from '../errors';
 
@@ -50,7 +52,9 @@ class UpdateCourseInput {
 export class CourseResolver {
   // --- Queries ---
 
-  @Query(() => [Course], { description: 'Get all courses created by the logged-in user' })
+  @Query(() => [Course], {
+    description: 'Get all courses created by the logged-in user',
+  })
   async myCourses(@Ctx() ctx: GraphQLContext): Promise<Course[]> {
     const userId = ctx.auth?.userId;
     if (!userId) {
@@ -60,15 +64,22 @@ export class CourseResolver {
     return ctx.prisma.course.findMany({
       where: { creatorId: userId },
       orderBy: { createdAt: 'desc' },
-      include:{
-        creator:true,
-        conversation:true,
-        chapters:true,
-      }
+      include: {
+        creator: true,
+        conversation: true,
+        chapters: {
+          include: {
+            quizzes: true,
+          },
+        },
+      },
     });
   }
 
-  @Query(() => Course, { nullable: true, description: 'Get a specific course by ID, if owned by the user' })
+  @Query(() => Course, {
+    nullable: true,
+    description: 'Get a specific course by ID, if owned by the user',
+  })
   async courseById(
     @Arg('id', () => ID) id: string,
     @Ctx() ctx: GraphQLContext
@@ -80,23 +91,23 @@ export class CourseResolver {
 
     const course = await ctx.prisma.course.findUnique({
       where: { id: id },
+      include: {
+        chapters: true,
+      },
     });
 
     if (!course) {
-      // Consider throwing NotFoundError if you prefer errors over null
-      // throw new NotFoundError('Course not found');
       return null;
     }
 
-    // Authorization check
     if (course.creatorId !== userId) {
-      throw new ForbiddenError('You do not have permission to view this course');
+      throw new ForbiddenError(
+        'You do not have permission to view this course'
+      );
     }
 
     return course;
   }
-
-  // --- Mutations ---
 
   @Mutation(() => Course, { description: 'Create a new course' })
   async createCourse(
@@ -111,12 +122,14 @@ export class CourseResolver {
     return ctx.prisma.course.create({
       data: {
         ...input,
-        creatorId: userId, // Associate with the logged-in user
+        creatorId: userId,
       },
     });
   }
 
-  @Mutation(() => Course, { description: 'Update an existing course owned by the user' })
+  @Mutation(() => Course, {
+    description: 'Update an existing course owned by the user',
+  })
   async updateCourse(
     @Arg('id', () => ID) id: string,
     @Arg('input') input: UpdateCourseInput,
@@ -127,10 +140,9 @@ export class CourseResolver {
       throw new AuthenticationError();
     }
 
-    // Verify ownership before updating
     const course = await ctx.prisma.course.findUnique({
       where: { id: id },
-      select: { creatorId: true }, // Only fetch necessary field
+      select: { creatorId: true },
     });
 
     if (!course) {
@@ -138,15 +150,15 @@ export class CourseResolver {
     }
 
     if (course.creatorId !== userId) {
-      throw new ForbiddenError('You do not have permission to update this course');
+      throw new ForbiddenError(
+        'You do not have permission to update this course'
+      );
     }
 
-    // Perform the update
     return ctx.prisma.course.update({
       where: { id: id },
       data: {
         ...input,
-        // Prisma automatically handles updatedAt
       },
     });
   }
@@ -168,11 +180,13 @@ export class CourseResolver {
     });
 
     if (!course) {
-       throw new NotFoundError('Course not found');
+      throw new NotFoundError('Course not found');
     }
 
     if (course.creatorId !== userId) {
-      throw new ForbiddenError('You do not have permission to delete this course');
+      throw new ForbiddenError(
+        'You do not have permission to delete this course'
+      );
     }
 
     // Perform the deletion
@@ -181,5 +195,23 @@ export class CourseResolver {
     });
 
     return true;
+  }
+
+  @FieldResolver(() => [Chapter], { description: 'Chapters for the course' })
+  async chapters(
+    @Root() course: Course,
+    @Ctx() ctx: GraphQLContext
+  ): Promise<Chapter[]> {
+    if (course.chapters) {
+      return course.chapters;
+    }
+    console.warn(
+      `Manually fetching chapters for course ${course.id} in FieldResolver`
+    );
+    return ctx.prisma.chapter.findMany({
+      where: { courseId: course.id },
+      // Include nested relations if needed here
+      // include: { quizzes: true }
+    });
   }
 }

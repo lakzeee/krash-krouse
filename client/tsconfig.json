@@ -23,18 +23,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/utils": [
-        "./utils/*"
-      ],
-      "@/components": [
-        "./components/*"
-      ],
-      "@/services": [
-        "./services/*"
-      ]
+      "@/*": ["./*"],
+      "@/utils": ["./utils/*"],
+      "@/components": ["./components/*"],
+      "@/services": ["./services/*"],
+      "@/store": ["./store/*"]
     },
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

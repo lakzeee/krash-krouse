@@ -80,9 +80,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   h1 {
     @apply text-3xl font-bold mb-4;
   }
@@ -96,3 +98,27 @@
     @apply mb-4 text-base;
   }
 }
+
+  .container-wrapper {
+    @apply mx-auto md:max-w-7xl;
+  }
+
+  /* In your globals.css or a relevant CSS file */
+
+  .content-wrapper {
+    /* Base styles */
+    min-height: 100vh; /* Ensure it takes up space */
+    
+    /* Transition setup */
+    transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out; /* Smooth transition for scale and radius */
+    transform-origin: center; /* Scale from the center */
+    transform: scale(1);      /* Default scale */
+    border-radius: 0px;     /* Default radius */
+    overflow: hidden;       /* Prevents content spill during transform/radius changes */
+  }
+
+  .content-wrapper.shrunk {
+    transform: scale(0.95); /* Slightly shrink the content */
+    border-radius: 10px;   /* Optional: Add rounded corners like iOS */
+    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); Optional: Add a subtle shadow */
+  }

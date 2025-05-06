@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function Nav() {
   return (
-    <header className="bg-card flex h-16 items-center justify-between gap-4 p-4 text-center">
+    <header className="flex h-16 items-center justify-between gap-4 p-4 text-center">
       <div className="mx-auto flex w-full items-center justify-between md:max-w-7xl">
         <Link href="/" className="text-2xl font-bold">
           Krash Kourse

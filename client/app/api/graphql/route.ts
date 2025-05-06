@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
 import { CourseResolver, GraphQLContext } from '@/graphql';
-
+import { CourseService, ChapterService, ConversationService, MessageService, UserService, LLModelService } from '@/prisma/services';
 const schema = await buildSchema({
   resolvers: [CourseResolver],
   validate: false,
@@ -15,7 +15,19 @@ const yoga = createYoga<GraphQLContext>({
   schema,
   context: async ({ request }) => {
     const authResult = await auth();
-    return { prisma, req: request, auth: authResult };
+    return {
+      prisma,
+      req: request,
+      auth: authResult,
+      services: {
+        courseService: new CourseService(),
+        chapterService: new ChapterService(),
+        conversationService: new ConversationService(),
+        messageService: new MessageService(),
+        userService: new UserService(),
+        llmodelService: new LLModelService(),
+      },
+    };
   },
   graphqlEndpoint: '/api/graphql',
   fetchAPI: { Response, Request: Request },

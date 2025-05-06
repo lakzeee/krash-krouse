@@ -22,8 +22,7 @@ export default function DashboardPage() {
         <DrawerTrigger onClick={openDrawer}>Open</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            <DrawerTitle>New Course</DrawerTitle>
           </DrawerHeader>
           <DrawerFooter>
             <Button>Submit</Button>

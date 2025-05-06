@@ -27,7 +27,8 @@
       "@/utils": ["./utils/*"],
       "@/components": ["./components/*"],
       "@/services": ["./services/*"],
-      "@/store": ["./store/*"]
+      "@/store": ["./store/*"],
+      "@/prisma": ["./prisma/*"],
     },
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

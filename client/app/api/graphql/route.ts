@@ -4,10 +4,16 @@ import type { NextRequest } from 'next/server';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { prisma } from '@/services/prisma';
-import { CourseResolver, GraphQLContext } from '@/graphql';
+import {
+  CourseResolver,
+  ConversationResolver,
+  GraphQLContext,
+} from '@/graphql';
 import { CourseService, ChapterService, ConversationService, MessageService, UserService, LLModelService } from '@/prisma/services';
+
+
 const schema = await buildSchema({
-  resolvers: [CourseResolver],
+  resolvers: [CourseResolver, ConversationResolver],
   validate: false,
 });
 
@@ -30,7 +36,7 @@ const yoga = createYoga<GraphQLContext>({
     };
   },
   graphqlEndpoint: '/api/graphql',
-  fetchAPI: { Response, Request: Request },
+  fetchAPI: { Response, Request },
 });
 
 export async function GET(request: NextRequest) {

@@ -163,6 +163,20 @@ export class CourseService {
       `Fetching course by conversation ${conversationId} via CourseService`
     );
     return prisma.course.findUnique({
+      select: {
+        id: true,
+        creatorId: true,
+        conversationId: true,
+        topic: true,
+        goal: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        isPublic: true,
+        creator: true,
+        conversation: true,
+        chapters: true,
+      },
       where: { conversationId: conversationId },
     });
   }

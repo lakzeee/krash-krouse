@@ -1,14 +1,13 @@
-import { Message, PrismaClient } from "@prisma/client";
+import { Message } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 export class MessageService {
   /**
    * Finds all messages associated with a specific conversation ID, ordered by timestamp.
-   * @param prisma - The PrismaClient instance.
    * @param conversationId - The ID of the conversation to find messages for.
    * @returns A promise resolving to an array of Message objects.
    */
   async findMessagesByConversationId(
-    prisma: PrismaClient,
     conversationId: string
   ): Promise<Message[]> {
     console.log(
@@ -24,14 +23,12 @@ export class MessageService {
 
   /**
    * Creates a new message within a conversation.
-   * @param prisma - The PrismaClient instance.
    * @param conversationId - The ID of the conversation this message belongs to.
    * @param isUser - Boolean indicating if the message is from the user (true) or the model (false).
    * @param parts - The JSON content of the message.
    * @returns A promise resolving to the newly created Message object.
    */
   async createMessage(
-    prisma: PrismaClient,
     conversationId: string,
     isUser: boolean,
     parts: any // Use a more specific type based on your MessageParts definition

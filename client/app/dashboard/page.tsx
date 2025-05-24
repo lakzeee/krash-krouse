@@ -5,7 +5,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -24,6 +23,7 @@ export default function DashboardPage() {
           <DrawerHeader>
             <DrawerTitle>New Course</DrawerTitle>
           </DrawerHeader>
+
           <DrawerFooter>
             <Button>Submit</Button>
             <DrawerClose>cancel</DrawerClose>

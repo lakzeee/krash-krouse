@@ -1,11 +1,8 @@
-import { PrismaClient as PrismaClientType, Chapter as ChapterType } from '@prisma/client';
-
+import { Chapter } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 export class ChapterService {
-  async findChaptersByCourseId(
-    prisma: PrismaClientType,
-    courseId: string
-  ): Promise<ChapterType[]> {
+  async findChaptersByCourseId(courseId: string): Promise<Chapter[]> {
     console.log(`Fetching chapters for course ${courseId} via ChapterService`);
     return prisma.chapter.findMany({
       where: { courseId: courseId },

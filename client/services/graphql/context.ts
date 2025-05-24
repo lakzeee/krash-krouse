@@ -8,7 +8,7 @@ import {
   MessageService,
   UserService,
   LLModelService,
-} from '@/prisma/services';
+} from '@/services/prisma';
 
 export interface GraphQLContext {
   prisma: PrismaClient;

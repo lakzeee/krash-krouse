@@ -1,7 +1,7 @@
-import { Webhook } from 'svix';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { headers } from 'next/headers';
-import { prisma } from '@/services/prisma';
+import { Webhook } from 'svix';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   const secret = process.env.SIGNING_SECRET;
@@ -15,10 +15,19 @@ export async function POST(req: Request) {
     'svix-id': headerPayload.get('svix-id')!,
     'svix-timestamp': headerPayload.get('svix-timestamp')!,
     'svix-signature': headerPayload.get('svix-signature')!,
-    }) as WebhookEvent;
+  }) as WebhookEvent;
 
   if (event.type === 'user.created') {
-    const { id, email_addresses, first_name, last_name, image_url, last_sign_in_at, created_at, updated_at } = event.data;
+    const {
+      id,
+      email_addresses,
+      first_name,
+      last_name,
+      image_url,
+      last_sign_in_at,
+      created_at,
+      updated_at,
+    } = event.data;
 
     const email = email_addresses?.[0]?.email_address;
     if (!email) {
@@ -40,16 +49,26 @@ export async function POST(req: Request) {
       },
     });
   } else if (event.type === 'user.updated') {
-    const { id, email_addresses, first_name, last_name, image_url, last_sign_in_at, updated_at } = event.data;
+    const {
+      id,
+      email_addresses,
+      first_name,
+      last_name,
+      image_url,
+      last_sign_in_at,
+      updated_at,
+    } = event.data;
 
     // Check if user exists before updating
     const existingUser = await prisma.user.findUnique({
       where: { id },
-      select: { id: true } // Only select id for efficiency
+      select: { id: true }, // Only select id for efficiency
     });
 
     if (!existingUser) {
-      console.warn(`Skipping user.updated for user ${id}: User not found in database.`);
+      console.warn(
+        `Skipping user.updated for user ${id}: User not found in database.`
+      );
       // Acknowledge webhook, but indicate user wasn't found locally
       return new Response('OK - User not found', { status: 200 });
     }
@@ -74,11 +93,13 @@ export async function POST(req: Request) {
     // Important if Clerk sends delete event even if create/sync failed previously
     const existingUser = await prisma.user.findUnique({
       where: { id },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!existingUser) {
-      console.warn(`Skipping user.deleted for user ${id}: User not found in database.`);
+      console.warn(
+        `Skipping user.deleted for user ${id}: User not found in database.`
+      );
       return new Response('OK - User not found', { status: 200 });
     }
 

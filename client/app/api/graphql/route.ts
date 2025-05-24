@@ -3,17 +3,19 @@ import { createYoga } from 'graphql-yoga';
 import type { NextRequest } from 'next/server';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { prisma } from '@/services/prisma';
+import { CourseResolver, GraphQLContext } from '@/services/graphql';
 import {
-  CourseResolver,
-  ConversationResolver,
-  GraphQLContext,
-} from '@/graphql';
-import { CourseService, ChapterService, ConversationService, MessageService, UserService, LLModelService } from '@/prisma/services';
-
+  CourseService,
+  ChapterService,
+  ConversationService,
+  MessageService,
+  UserService,
+  LLModelService,
+} from '@/services/prisma';
+import { prisma } from '@/lib/prisma';
 
 const schema = await buildSchema({
-  resolvers: [CourseResolver, ConversationResolver],
+  resolvers: [CourseResolver],
   validate: false,
 });
 

@@ -1,6 +1,7 @@
 import { Conversation } from '@prisma/client';
 import { NotFoundError } from '@/services/graphql/errors';
 import { prisma } from '@/lib/prisma';
+import { MessageService } from './MessageService';
 
 export class ConversationService {
   /**
@@ -44,18 +45,30 @@ export class ConversationService {
    */
   async createConversation(
     userId: string,
-    systemPrompt?: string,
-    aiModelId?: string
+    aiModelId: string,
+    message: string,
+    systemPrompt?: string
   ): Promise<Conversation> {
     console.log(
       `Creating conversation for user ${userId} via ConversationService`
     );
-    return prisma.conversation.create({
-      data: {
-        userId: userId,
-        systemPrompt: systemPrompt,
-        aiModelId: aiModelId,
-      },
+
+    return prisma.$transaction(async (tx) => {
+      const conversation = await tx.conversation.create({
+        data: {
+          userId: userId,
+          aiModelId: aiModelId,
+          systemPrompt: systemPrompt,
+          messages: {
+            create: {
+              parts: JSON.stringify([{ text: message }]),
+              isUser: true,
+            },
+          },
+        },
+      });
+
+      return conversation;
     });
   }
 

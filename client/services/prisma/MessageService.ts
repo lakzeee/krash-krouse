@@ -1,3 +1,4 @@
+import { Part } from '@google/genai';
 import { Message } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
@@ -31,7 +32,7 @@ export class MessageService {
   async createMessage(
     conversationId: string,
     isUser: boolean,
-    parts: any // Use a more specific type based on your MessageParts definition
+    parts: Part[]
   ): Promise<Message> {
     console.log(
       `Creating message for conversation ${conversationId} via MessageService`
@@ -40,7 +41,7 @@ export class MessageService {
       data: {
         conversationId: conversationId,
         isUser: isUser,
-        parts: parts,
+        parts: JSON.stringify(parts),
         // timestamp defaults to now() via @default(now())
       },
     });

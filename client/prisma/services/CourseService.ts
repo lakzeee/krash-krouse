@@ -1,7 +1,6 @@
 import { Course, Prisma } from '@prisma/client';
-import { NotFoundError, ForbiddenError } from '@/services/graphql/errors';
+import { NotFoundError, ForbiddenError } from '@/lib/errors/prisma';
 import { prisma } from '@/lib/prisma';
-import { CreateCourseInput, UpdateCourseInput } from '@/types/graphql';
 
 export class CourseService {
   /**
@@ -67,7 +66,7 @@ export class CourseService {
    */
   async createCourse(
     userId: string,
-    input: CreateCourseInput
+    input: Prisma.CourseCreateInput
   ): Promise<Course> {
     console.log(`Creating course for user ${userId} via CourseService`);
     return prisma.course.create({
@@ -92,7 +91,7 @@ export class CourseService {
   async updateCourse(
     userId: string,
     courseId: string,
-    input: UpdateCourseInput
+    input: Prisma.CourseUpdateInput
   ): Promise<Course> {
     console.log(
       `Updating course ${courseId} for user ${userId} via CourseService`

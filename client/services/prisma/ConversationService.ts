@@ -1,7 +1,6 @@
 import { Conversation } from '@prisma/client';
-import { NotFoundError } from '@/services/graphql/errors';
+import { NotFoundError } from '@/lib/errors/prisma';
 import { prisma } from '@/lib/prisma';
-import { MessageService } from './MessageService';
 
 export class ConversationService {
   /**

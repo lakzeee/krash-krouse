@@ -21,22 +21,6 @@ export default function ApiDocsLayout({
                 Interactive API Documentation
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="/"
-                className="text-primary hover:text-primary/80 transition-colors"
-              >
-                ← Back to App
-              </a>
-              <a
-                href="/api/graphql"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/80 transition-colors"
-              >
-                GraphQL Playground
-              </a>
-            </div>
           </div>
         </div>
       </header>

@@ -5,24 +5,11 @@ import {
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
-// Define the RouteHandler type for Next.js API routes
-type RouteHandler<TParams = any> = (
-  req: NextRequest | Request,
-  context: { params?: Promise<TParams> }
-) => Promise<NextResponse> | NextResponse;
-
-export function withRouteErrorHandling<TParams = any>(
-  handler: RouteHandler<TParams>
-): RouteHandler<TParams> {
-  return (async (
-    req: NextRequest | Request,
-    context: { params?: Promise<TParams> }
-  ) => {
+export function withRouteErrorHandling(handler: any): any {
+  return async (req: NextRequest | Request, context: any) => {
     try {
       return await handler(req, context);
     } catch (error: unknown) {
-      // console.error(`Error in route handler ${handler.name || 'anonymous'}:`, error); // Logging is good
-      // (Error handling logic from the decorator's descriptor.value can be duplicated here)
       if (error instanceof ZodError) {
         return NextResponse.json(
           { message: 'Validation failed', errors: error.flatten().fieldErrors },
@@ -30,7 +17,6 @@ export function withRouteErrorHandling<TParams = any>(
         );
       }
       if (error instanceof PrismaClientKnownRequestError) {
-        // ... (same Prisma error handling as above in the decorator)
         switch (error.code) {
           case 'P2000':
             return NextResponse.json(
@@ -93,5 +79,5 @@ export function withRouteErrorHandling<TParams = any>(
       }
       return NextResponse.json({ message: errorMessage }, { status: 500 });
     }
-  }) as RouteHandler<TParams>;
+  };
 }

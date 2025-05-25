@@ -3,10 +3,6 @@ generator client {
   previewFeatures = ["tracing"]
 }
 
-generator typegraphql {
-  provider = "typegraphql-prisma"
-}
-
 generator zod {
   provider       = "zod-prisma-types"
 }

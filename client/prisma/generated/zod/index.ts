@@ -130,7 +130,7 @@ export type User = z.infer<typeof UserSchema>
 /////////////////////////////////////////
 
 export const ConversationSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   userId: z.string().nullable(),
   courseId: z.string().nullable(),
   systemPrompt: z.string().nullable(),
@@ -147,7 +147,7 @@ export type Conversation = z.infer<typeof ConversationSchema>
 
 export const LLModelSchema = z.object({
   provider: LLMProviderSchema,
-  id: z.string(),
+  id: z.string().uuid(),
   modelName: z.string(),
   displayName: z.string().nullable(),
   contextWindow: z.number().int().nullable(),
@@ -162,7 +162,7 @@ export type LLModel = z.infer<typeof LLModelSchema>
 /////////////////////////////////////////
 
 export const MessageSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   conversationId: z.string(),
   isUser: z.boolean(),
   parts: JsonValueSchema,
@@ -176,7 +176,7 @@ export type Message = z.infer<typeof MessageSchema>
 /////////////////////////////////////////
 
 export const CourseSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   creatorId: z.string(),
   conversationId: z.string().nullable(),
   topic: z.string(),
@@ -195,7 +195,7 @@ export type Course = z.infer<typeof CourseSchema>
 
 export const ChapterSchema = z.object({
   status: ChapterStatusSchema,
-  id: z.string(),
+  id: z.string().uuid(),
   courseId: z.string(),
   title: z.string().nullable(),
   order: z.number().int(),
@@ -213,7 +213,7 @@ export type Chapter = z.infer<typeof ChapterSchema>
 
 export const QuizSchema = z.object({
   quizType: QuizTypeSchema.nullable(),
-  id: z.string(),
+  id: z.string().uuid(),
   chapterId: z.string(),
   title: z.string().nullable(),
   createdAt: z.coerce.date(),
@@ -228,7 +228,7 @@ export type Quiz = z.infer<typeof QuizSchema>
 
 export const QuestionSchema = z.object({
   type: QuizTypeSchema,
-  id: z.string(),
+  id: z.string().uuid(),
   quizId: z.string(),
   order: z.number().int(),
   text: z.string(),
@@ -245,7 +245,7 @@ export type Question = z.infer<typeof QuestionSchema>
 
 export const QuizAttemptSchema = z.object({
   status: QuizAttemptStatusSchema,
-  id: z.string(),
+  id: z.string().uuid(),
   userId: z.string(),
   quizId: z.string(),
   score: z.number().nullable(),
@@ -262,7 +262,7 @@ export type QuizAttempt = z.infer<typeof QuizAttemptSchema>
 /////////////////////////////////////////
 
 export const UserQuizResponseSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   quizAttemptId: z.string(),
   questionId: z.string(),
   userAnswer: JsonValueSchema,
@@ -727,9 +727,9 @@ export const ConversationWhereInputSchema: z.ZodType<Prisma.ConversationWhereInp
   aiModelId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   lastUpdate: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserNullableRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
-  aiModel: z.union([ z.lazy(() => LLModelNullableRelationFilterSchema),z.lazy(() => LLModelWhereInputSchema) ]).optional().nullable(),
-  course: z.union([ z.lazy(() => CourseNullableRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional().nullable(),
+  user: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
+  aiModel: z.union([ z.lazy(() => LLModelNullableScalarRelationFilterSchema),z.lazy(() => LLModelWhereInputSchema) ]).optional().nullable(),
+  course: z.union([ z.lazy(() => CourseNullableScalarRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional().nullable(),
   messages: z.lazy(() => MessageListRelationFilterSchema).optional()
 }).strict();
 
@@ -749,18 +749,18 @@ export const ConversationOrderByWithRelationInputSchema: z.ZodType<Prisma.Conver
 
 export const ConversationWhereUniqueInputSchema: z.ZodType<Prisma.ConversationWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     courseId: z.string()
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     courseId: z.string(),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional(),
   AND: z.union([ z.lazy(() => ConversationWhereInputSchema),z.lazy(() => ConversationWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => ConversationWhereInputSchema).array().optional(),
@@ -770,9 +770,9 @@ export const ConversationWhereUniqueInputSchema: z.ZodType<Prisma.ConversationWh
   aiModelId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   lastUpdate: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserNullableRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
-  aiModel: z.union([ z.lazy(() => LLModelNullableRelationFilterSchema),z.lazy(() => LLModelWhereInputSchema) ]).optional().nullable(),
-  course: z.union([ z.lazy(() => CourseNullableRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional().nullable(),
+  user: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
+  aiModel: z.union([ z.lazy(() => LLModelNullableScalarRelationFilterSchema),z.lazy(() => LLModelWhereInputSchema) ]).optional().nullable(),
+  course: z.union([ z.lazy(() => CourseNullableScalarRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional().nullable(),
   messages: z.lazy(() => MessageListRelationFilterSchema).optional()
 }).strict());
 
@@ -829,18 +829,18 @@ export const LLModelOrderByWithRelationInputSchema: z.ZodType<Prisma.LLModelOrde
 
 export const LLModelWhereUniqueInputSchema: z.ZodType<Prisma.LLModelWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     modelName: z.string()
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     modelName: z.string(),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   modelName: z.string().optional(),
   AND: z.union([ z.lazy(() => LLModelWhereInputSchema),z.lazy(() => LLModelWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => LLModelWhereInputSchema).array().optional(),
@@ -890,7 +890,7 @@ export const MessageWhereInputSchema: z.ZodType<Prisma.MessageWhereInput> = z.ob
   isUser: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   parts: z.lazy(() => JsonFilterSchema).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  conversation: z.union([ z.lazy(() => ConversationRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional(),
+  conversation: z.union([ z.lazy(() => ConversationScalarRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional(),
 }).strict();
 
 export const MessageOrderByWithRelationInputSchema: z.ZodType<Prisma.MessageOrderByWithRelationInput> = z.object({
@@ -903,10 +903,10 @@ export const MessageOrderByWithRelationInputSchema: z.ZodType<Prisma.MessageOrde
 }).strict();
 
 export const MessageWhereUniqueInputSchema: z.ZodType<Prisma.MessageWhereUniqueInput> = z.object({
-  id: z.string()
+  id: z.string().uuid()
 })
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   AND: z.union([ z.lazy(() => MessageWhereInputSchema),z.lazy(() => MessageWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => MessageWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => MessageWhereInputSchema),z.lazy(() => MessageWhereInputSchema).array() ]).optional(),
@@ -914,7 +914,7 @@ export const MessageWhereUniqueInputSchema: z.ZodType<Prisma.MessageWhereUniqueI
   isUser: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   parts: z.lazy(() => JsonFilterSchema).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  conversation: z.union([ z.lazy(() => ConversationRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional(),
+  conversation: z.union([ z.lazy(() => ConversationScalarRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional(),
 }).strict());
 
 export const MessageOrderByWithAggregationInputSchema: z.ZodType<Prisma.MessageOrderByWithAggregationInput> = z.object({
@@ -952,8 +952,8 @@ export const CourseWhereInputSchema: z.ZodType<Prisma.CourseWhereInput> = z.obje
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   isPublic: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  creator: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  conversation: z.union([ z.lazy(() => ConversationNullableRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional().nullable(),
+  creator: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  conversation: z.union([ z.lazy(() => ConversationNullableScalarRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional().nullable(),
   chapters: z.lazy(() => ChapterListRelationFilterSchema).optional()
 }).strict();
 
@@ -974,18 +974,18 @@ export const CourseOrderByWithRelationInputSchema: z.ZodType<Prisma.CourseOrderB
 
 export const CourseWhereUniqueInputSchema: z.ZodType<Prisma.CourseWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     conversationId: z.string()
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     conversationId: z.string(),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   conversationId: z.string().optional(),
   AND: z.union([ z.lazy(() => CourseWhereInputSchema),z.lazy(() => CourseWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => CourseWhereInputSchema).array().optional(),
@@ -997,8 +997,8 @@ export const CourseWhereUniqueInputSchema: z.ZodType<Prisma.CourseWhereUniqueInp
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   isPublic: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  creator: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  conversation: z.union([ z.lazy(() => ConversationNullableRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional().nullable(),
+  creator: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  conversation: z.union([ z.lazy(() => ConversationNullableScalarRelationFilterSchema),z.lazy(() => ConversationWhereInputSchema) ]).optional().nullable(),
   chapters: z.lazy(() => ChapterListRelationFilterSchema).optional()
 }).strict());
 
@@ -1045,7 +1045,7 @@ export const ChapterWhereInputSchema: z.ZodType<Prisma.ChapterWhereInput> = z.ob
   content: z.lazy(() => JsonNullableFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  course: z.union([ z.lazy(() => CourseRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional(),
+  course: z.union([ z.lazy(() => CourseScalarRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional(),
   quizzes: z.lazy(() => QuizListRelationFilterSchema).optional()
 }).strict();
 
@@ -1065,18 +1065,18 @@ export const ChapterOrderByWithRelationInputSchema: z.ZodType<Prisma.ChapterOrde
 
 export const ChapterWhereUniqueInputSchema: z.ZodType<Prisma.ChapterWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     courseId_order: z.lazy(() => ChapterCourseIdOrderCompoundUniqueInputSchema)
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     courseId_order: z.lazy(() => ChapterCourseIdOrderCompoundUniqueInputSchema),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId_order: z.lazy(() => ChapterCourseIdOrderCompoundUniqueInputSchema).optional(),
   AND: z.union([ z.lazy(() => ChapterWhereInputSchema),z.lazy(() => ChapterWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => ChapterWhereInputSchema).array().optional(),
@@ -1089,7 +1089,7 @@ export const ChapterWhereUniqueInputSchema: z.ZodType<Prisma.ChapterWhereUniqueI
   content: z.lazy(() => JsonNullableFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  course: z.union([ z.lazy(() => CourseRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional(),
+  course: z.union([ z.lazy(() => CourseScalarRelationFilterSchema),z.lazy(() => CourseWhereInputSchema) ]).optional(),
   quizzes: z.lazy(() => QuizListRelationFilterSchema).optional()
 }).strict());
 
@@ -1135,7 +1135,7 @@ export const QuizWhereInputSchema: z.ZodType<Prisma.QuizWhereInput> = z.object({
   quizType: z.union([ z.lazy(() => EnumQuizTypeNullableFilterSchema),z.lazy(() => QuizTypeSchema) ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  chapter: z.union([ z.lazy(() => ChapterRelationFilterSchema),z.lazy(() => ChapterWhereInputSchema) ]).optional(),
+  chapter: z.union([ z.lazy(() => ChapterScalarRelationFilterSchema),z.lazy(() => ChapterWhereInputSchema) ]).optional(),
   questions: z.lazy(() => QuestionListRelationFilterSchema).optional(),
   attempts: z.lazy(() => QuizAttemptListRelationFilterSchema).optional()
 }).strict();
@@ -1153,10 +1153,10 @@ export const QuizOrderByWithRelationInputSchema: z.ZodType<Prisma.QuizOrderByWit
 }).strict();
 
 export const QuizWhereUniqueInputSchema: z.ZodType<Prisma.QuizWhereUniqueInput> = z.object({
-  id: z.string()
+  id: z.string().uuid()
 })
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   AND: z.union([ z.lazy(() => QuizWhereInputSchema),z.lazy(() => QuizWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => QuizWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => QuizWhereInputSchema),z.lazy(() => QuizWhereInputSchema).array() ]).optional(),
@@ -1165,7 +1165,7 @@ export const QuizWhereUniqueInputSchema: z.ZodType<Prisma.QuizWhereUniqueInput> 
   quizType: z.union([ z.lazy(() => EnumQuizTypeNullableFilterSchema),z.lazy(() => QuizTypeSchema) ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  chapter: z.union([ z.lazy(() => ChapterRelationFilterSchema),z.lazy(() => ChapterWhereInputSchema) ]).optional(),
+  chapter: z.union([ z.lazy(() => ChapterScalarRelationFilterSchema),z.lazy(() => ChapterWhereInputSchema) ]).optional(),
   questions: z.lazy(() => QuestionListRelationFilterSchema).optional(),
   attempts: z.lazy(() => QuizAttemptListRelationFilterSchema).optional()
 }).strict());
@@ -1206,7 +1206,7 @@ export const QuestionWhereInputSchema: z.ZodType<Prisma.QuestionWhereInput> = z.
   options: z.lazy(() => JsonNullableFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  quiz: z.union([ z.lazy(() => QuizRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
+  quiz: z.union([ z.lazy(() => QuizScalarRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
   responses: z.lazy(() => UserQuizResponseListRelationFilterSchema).optional()
 }).strict();
 
@@ -1225,18 +1225,18 @@ export const QuestionOrderByWithRelationInputSchema: z.ZodType<Prisma.QuestionOr
 
 export const QuestionWhereUniqueInputSchema: z.ZodType<Prisma.QuestionWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     quizId_order: z.lazy(() => QuestionQuizIdOrderCompoundUniqueInputSchema)
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     quizId_order: z.lazy(() => QuestionQuizIdOrderCompoundUniqueInputSchema),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId_order: z.lazy(() => QuestionQuizIdOrderCompoundUniqueInputSchema).optional(),
   AND: z.union([ z.lazy(() => QuestionWhereInputSchema),z.lazy(() => QuestionWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => QuestionWhereInputSchema).array().optional(),
@@ -1248,7 +1248,7 @@ export const QuestionWhereUniqueInputSchema: z.ZodType<Prisma.QuestionWhereUniqu
   options: z.lazy(() => JsonNullableFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  quiz: z.union([ z.lazy(() => QuizRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
+  quiz: z.union([ z.lazy(() => QuizScalarRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
   responses: z.lazy(() => UserQuizResponseListRelationFilterSchema).optional()
 }).strict());
 
@@ -1295,8 +1295,8 @@ export const QuizAttemptWhereInputSchema: z.ZodType<Prisma.QuizAttemptWhereInput
   completedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  quiz: z.union([ z.lazy(() => QuizRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  quiz: z.union([ z.lazy(() => QuizScalarRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
   responses: z.lazy(() => UserQuizResponseListRelationFilterSchema).optional()
 }).strict();
 
@@ -1316,10 +1316,10 @@ export const QuizAttemptOrderByWithRelationInputSchema: z.ZodType<Prisma.QuizAtt
 }).strict();
 
 export const QuizAttemptWhereUniqueInputSchema: z.ZodType<Prisma.QuizAttemptWhereUniqueInput> = z.object({
-  id: z.string()
+  id: z.string().uuid()
 })
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   AND: z.union([ z.lazy(() => QuizAttemptWhereInputSchema),z.lazy(() => QuizAttemptWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => QuizAttemptWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => QuizAttemptWhereInputSchema),z.lazy(() => QuizAttemptWhereInputSchema).array() ]).optional(),
@@ -1331,8 +1331,8 @@ export const QuizAttemptWhereUniqueInputSchema: z.ZodType<Prisma.QuizAttemptWher
   completedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
-  quiz: z.union([ z.lazy(() => QuizRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  quiz: z.union([ z.lazy(() => QuizScalarRelationFilterSchema),z.lazy(() => QuizWhereInputSchema) ]).optional(),
   responses: z.lazy(() => UserQuizResponseListRelationFilterSchema).optional()
 }).strict());
 
@@ -1379,8 +1379,8 @@ export const UserQuizResponseWhereInputSchema: z.ZodType<Prisma.UserQuizResponse
   isCorrect: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
   submittedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  quizAttempt: z.union([ z.lazy(() => QuizAttemptRelationFilterSchema),z.lazy(() => QuizAttemptWhereInputSchema) ]).optional(),
-  question: z.union([ z.lazy(() => QuestionRelationFilterSchema),z.lazy(() => QuestionWhereInputSchema) ]).optional(),
+  quizAttempt: z.union([ z.lazy(() => QuizAttemptScalarRelationFilterSchema),z.lazy(() => QuizAttemptWhereInputSchema) ]).optional(),
+  question: z.union([ z.lazy(() => QuestionScalarRelationFilterSchema),z.lazy(() => QuestionWhereInputSchema) ]).optional(),
 }).strict();
 
 export const UserQuizResponseOrderByWithRelationInputSchema: z.ZodType<Prisma.UserQuizResponseOrderByWithRelationInput> = z.object({
@@ -1397,18 +1397,18 @@ export const UserQuizResponseOrderByWithRelationInputSchema: z.ZodType<Prisma.Us
 
 export const UserQuizResponseWhereUniqueInputSchema: z.ZodType<Prisma.UserQuizResponseWhereUniqueInput> = z.union([
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
     quizAttemptId_questionId: z.lazy(() => UserQuizResponseQuizAttemptIdQuestionIdCompoundUniqueInputSchema)
   }),
   z.object({
-    id: z.string(),
+    id: z.string().uuid(),
   }),
   z.object({
     quizAttemptId_questionId: z.lazy(() => UserQuizResponseQuizAttemptIdQuestionIdCompoundUniqueInputSchema),
   }),
 ])
 .and(z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizAttemptId_questionId: z.lazy(() => UserQuizResponseQuizAttemptIdQuestionIdCompoundUniqueInputSchema).optional(),
   AND: z.union([ z.lazy(() => UserQuizResponseWhereInputSchema),z.lazy(() => UserQuizResponseWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => UserQuizResponseWhereInputSchema).array().optional(),
@@ -1419,8 +1419,8 @@ export const UserQuizResponseWhereUniqueInputSchema: z.ZodType<Prisma.UserQuizRe
   isCorrect: z.union([ z.lazy(() => BoolNullableFilterSchema),z.boolean() ]).optional().nullable(),
   submittedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  quizAttempt: z.union([ z.lazy(() => QuizAttemptRelationFilterSchema),z.lazy(() => QuizAttemptWhereInputSchema) ]).optional(),
-  question: z.union([ z.lazy(() => QuestionRelationFilterSchema),z.lazy(() => QuestionWhereInputSchema) ]).optional(),
+  quizAttempt: z.union([ z.lazy(() => QuizAttemptScalarRelationFilterSchema),z.lazy(() => QuizAttemptWhereInputSchema) ]).optional(),
+  question: z.union([ z.lazy(() => QuestionScalarRelationFilterSchema),z.lazy(() => QuestionWhereInputSchema) ]).optional(),
 }).strict());
 
 export const UserQuizResponseOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserQuizResponseOrderByWithAggregationInput> = z.object({
@@ -1539,7 +1539,7 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
 }).strict();
 
 export const ConversationCreateInputSchema: z.ZodType<Prisma.ConversationCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   lastUpdate: z.coerce.date().optional(),
@@ -1551,7 +1551,7 @@ export const ConversationCreateInputSchema: z.ZodType<Prisma.ConversationCreateI
 }).strict();
 
 export const ConversationUncheckedCreateInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -1563,7 +1563,7 @@ export const ConversationUncheckedCreateInputSchema: z.ZodType<Prisma.Conversati
 }).strict();
 
 export const ConversationUpdateInputSchema: z.ZodType<Prisma.ConversationUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1575,7 +1575,7 @@ export const ConversationUpdateInputSchema: z.ZodType<Prisma.ConversationUpdateI
 }).strict();
 
 export const ConversationUncheckedUpdateInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1587,7 +1587,7 @@ export const ConversationUncheckedUpdateInputSchema: z.ZodType<Prisma.Conversati
 }).strict();
 
 export const ConversationCreateManyInputSchema: z.ZodType<Prisma.ConversationCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -1597,7 +1597,7 @@ export const ConversationCreateManyInputSchema: z.ZodType<Prisma.ConversationCre
 }).strict();
 
 export const ConversationUpdateManyMutationInputSchema: z.ZodType<Prisma.ConversationUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1605,7 +1605,7 @@ export const ConversationUpdateManyMutationInputSchema: z.ZodType<Prisma.Convers
 }).strict();
 
 export const ConversationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1615,7 +1615,7 @@ export const ConversationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Conver
 }).strict();
 
 export const LLModelCreateInputSchema: z.ZodType<Prisma.LLModelCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   provider: z.lazy(() => LLMProviderSchema),
   modelName: z.string(),
   displayName: z.string().optional().nullable(),
@@ -1626,7 +1626,7 @@ export const LLModelCreateInputSchema: z.ZodType<Prisma.LLModelCreateInput> = z.
 }).strict();
 
 export const LLModelUncheckedCreateInputSchema: z.ZodType<Prisma.LLModelUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   provider: z.lazy(() => LLMProviderSchema),
   modelName: z.string(),
   displayName: z.string().optional().nullable(),
@@ -1637,7 +1637,7 @@ export const LLModelUncheckedCreateInputSchema: z.ZodType<Prisma.LLModelUnchecke
 }).strict();
 
 export const LLModelUpdateInputSchema: z.ZodType<Prisma.LLModelUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1648,7 +1648,7 @@ export const LLModelUpdateInputSchema: z.ZodType<Prisma.LLModelUpdateInput> = z.
 }).strict();
 
 export const LLModelUncheckedUpdateInputSchema: z.ZodType<Prisma.LLModelUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1659,7 +1659,7 @@ export const LLModelUncheckedUpdateInputSchema: z.ZodType<Prisma.LLModelUnchecke
 }).strict();
 
 export const LLModelCreateManyInputSchema: z.ZodType<Prisma.LLModelCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   provider: z.lazy(() => LLMProviderSchema),
   modelName: z.string(),
   displayName: z.string().optional().nullable(),
@@ -1669,7 +1669,7 @@ export const LLModelCreateManyInputSchema: z.ZodType<Prisma.LLModelCreateManyInp
 }).strict();
 
 export const LLModelUpdateManyMutationInputSchema: z.ZodType<Prisma.LLModelUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1679,7 +1679,7 @@ export const LLModelUpdateManyMutationInputSchema: z.ZodType<Prisma.LLModelUpdat
 }).strict();
 
 export const LLModelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LLModelUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1689,7 +1689,7 @@ export const LLModelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LLModelUnch
 }).strict();
 
 export const MessageCreateInputSchema: z.ZodType<Prisma.MessageCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   timestamp: z.coerce.date().optional(),
@@ -1697,7 +1697,7 @@ export const MessageCreateInputSchema: z.ZodType<Prisma.MessageCreateInput> = z.
 }).strict();
 
 export const MessageUncheckedCreateInputSchema: z.ZodType<Prisma.MessageUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   conversationId: z.string(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
@@ -1705,7 +1705,7 @@ export const MessageUncheckedCreateInputSchema: z.ZodType<Prisma.MessageUnchecke
 }).strict();
 
 export const MessageUpdateInputSchema: z.ZodType<Prisma.MessageUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1713,7 +1713,7 @@ export const MessageUpdateInputSchema: z.ZodType<Prisma.MessageUpdateInput> = z.
 }).strict();
 
 export const MessageUncheckedUpdateInputSchema: z.ZodType<Prisma.MessageUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
@@ -1721,7 +1721,7 @@ export const MessageUncheckedUpdateInputSchema: z.ZodType<Prisma.MessageUnchecke
 }).strict();
 
 export const MessageCreateManyInputSchema: z.ZodType<Prisma.MessageCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   conversationId: z.string(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
@@ -1729,14 +1729,14 @@ export const MessageCreateManyInputSchema: z.ZodType<Prisma.MessageCreateManyInp
 }).strict();
 
 export const MessageUpdateManyMutationInputSchema: z.ZodType<Prisma.MessageUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MessageUncheckedUpdateManyInputSchema: z.ZodType<Prisma.MessageUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
@@ -1744,7 +1744,7 @@ export const MessageUncheckedUpdateManyInputSchema: z.ZodType<Prisma.MessageUnch
 }).strict();
 
 export const CourseCreateInputSchema: z.ZodType<Prisma.CourseCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   topic: z.string(),
   goal: z.string(),
   title: z.string().optional().nullable(),
@@ -1757,7 +1757,7 @@ export const CourseCreateInputSchema: z.ZodType<Prisma.CourseCreateInput> = z.ob
 }).strict();
 
 export const CourseUncheckedCreateInputSchema: z.ZodType<Prisma.CourseUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   creatorId: z.string(),
   conversationId: z.string().optional().nullable(),
   topic: z.string(),
@@ -1770,7 +1770,7 @@ export const CourseUncheckedCreateInputSchema: z.ZodType<Prisma.CourseUncheckedC
 }).strict();
 
 export const CourseUpdateInputSchema: z.ZodType<Prisma.CourseUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1783,7 +1783,7 @@ export const CourseUpdateInputSchema: z.ZodType<Prisma.CourseUpdateInput> = z.ob
 }).strict();
 
 export const CourseUncheckedUpdateInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   creatorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1796,7 +1796,7 @@ export const CourseUncheckedUpdateInputSchema: z.ZodType<Prisma.CourseUncheckedU
 }).strict();
 
 export const CourseCreateManyInputSchema: z.ZodType<Prisma.CourseCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   creatorId: z.string(),
   conversationId: z.string().optional().nullable(),
   topic: z.string(),
@@ -1808,7 +1808,7 @@ export const CourseCreateManyInputSchema: z.ZodType<Prisma.CourseCreateManyInput
 }).strict();
 
 export const CourseUpdateManyMutationInputSchema: z.ZodType<Prisma.CourseUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1818,7 +1818,7 @@ export const CourseUpdateManyMutationInputSchema: z.ZodType<Prisma.CourseUpdateM
 }).strict();
 
 export const CourseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   creatorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1830,7 +1830,7 @@ export const CourseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.CourseUnchec
 }).strict();
 
 export const ChapterCreateInputSchema: z.ZodType<Prisma.ChapterCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
   status: z.lazy(() => ChapterStatusSchema).optional(),
@@ -1843,7 +1843,7 @@ export const ChapterCreateInputSchema: z.ZodType<Prisma.ChapterCreateInput> = z.
 }).strict();
 
 export const ChapterUncheckedCreateInputSchema: z.ZodType<Prisma.ChapterUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
@@ -1856,7 +1856,7 @@ export const ChapterUncheckedCreateInputSchema: z.ZodType<Prisma.ChapterUnchecke
 }).strict();
 
 export const ChapterUpdateInputSchema: z.ZodType<Prisma.ChapterUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1869,7 +1869,7 @@ export const ChapterUpdateInputSchema: z.ZodType<Prisma.ChapterUpdateInput> = z.
 }).strict();
 
 export const ChapterUncheckedUpdateInputSchema: z.ZodType<Prisma.ChapterUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1882,7 +1882,7 @@ export const ChapterUncheckedUpdateInputSchema: z.ZodType<Prisma.ChapterUnchecke
 }).strict();
 
 export const ChapterCreateManyInputSchema: z.ZodType<Prisma.ChapterCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
@@ -1894,7 +1894,7 @@ export const ChapterCreateManyInputSchema: z.ZodType<Prisma.ChapterCreateManyInp
 }).strict();
 
 export const ChapterUpdateManyMutationInputSchema: z.ZodType<Prisma.ChapterUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1905,7 +1905,7 @@ export const ChapterUpdateManyMutationInputSchema: z.ZodType<Prisma.ChapterUpdat
 }).strict();
 
 export const ChapterUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChapterUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1917,7 +1917,7 @@ export const ChapterUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChapterUnch
 }).strict();
 
 export const QuizCreateInputSchema: z.ZodType<Prisma.QuizCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -1928,7 +1928,7 @@ export const QuizCreateInputSchema: z.ZodType<Prisma.QuizCreateInput> = z.object
 }).strict();
 
 export const QuizUncheckedCreateInputSchema: z.ZodType<Prisma.QuizUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   chapterId: z.string(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
@@ -1939,7 +1939,7 @@ export const QuizUncheckedCreateInputSchema: z.ZodType<Prisma.QuizUncheckedCreat
 }).strict();
 
 export const QuizUpdateInputSchema: z.ZodType<Prisma.QuizUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1950,7 +1950,7 @@ export const QuizUpdateInputSchema: z.ZodType<Prisma.QuizUpdateInput> = z.object
 }).strict();
 
 export const QuizUncheckedUpdateInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chapterId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1961,7 +1961,7 @@ export const QuizUncheckedUpdateInputSchema: z.ZodType<Prisma.QuizUncheckedUpdat
 }).strict();
 
 export const QuizCreateManyInputSchema: z.ZodType<Prisma.QuizCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   chapterId: z.string(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
@@ -1970,7 +1970,7 @@ export const QuizCreateManyInputSchema: z.ZodType<Prisma.QuizCreateManyInput> = 
 }).strict();
 
 export const QuizUpdateManyMutationInputSchema: z.ZodType<Prisma.QuizUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1978,7 +1978,7 @@ export const QuizUpdateManyMutationInputSchema: z.ZodType<Prisma.QuizUpdateManyM
 }).strict();
 
 export const QuizUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chapterId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1987,7 +1987,7 @@ export const QuizUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuizUncheckedU
 }).strict();
 
 export const QuestionCreateInputSchema: z.ZodType<Prisma.QuestionCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
   text: z.string(),
@@ -1999,7 +1999,7 @@ export const QuestionCreateInputSchema: z.ZodType<Prisma.QuestionCreateInput> = 
 }).strict();
 
 export const QuestionUncheckedCreateInputSchema: z.ZodType<Prisma.QuestionUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId: z.string(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
@@ -2011,7 +2011,7 @@ export const QuestionUncheckedCreateInputSchema: z.ZodType<Prisma.QuestionUnchec
 }).strict();
 
 export const QuestionUpdateInputSchema: z.ZodType<Prisma.QuestionUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2023,7 +2023,7 @@ export const QuestionUpdateInputSchema: z.ZodType<Prisma.QuestionUpdateInput> = 
 }).strict();
 
 export const QuestionUncheckedUpdateInputSchema: z.ZodType<Prisma.QuestionUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2035,7 +2035,7 @@ export const QuestionUncheckedUpdateInputSchema: z.ZodType<Prisma.QuestionUnchec
 }).strict();
 
 export const QuestionCreateManyInputSchema: z.ZodType<Prisma.QuestionCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId: z.string(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
@@ -2046,7 +2046,7 @@ export const QuestionCreateManyInputSchema: z.ZodType<Prisma.QuestionCreateManyI
 }).strict();
 
 export const QuestionUpdateManyMutationInputSchema: z.ZodType<Prisma.QuestionUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2056,7 +2056,7 @@ export const QuestionUpdateManyMutationInputSchema: z.ZodType<Prisma.QuestionUpd
 }).strict();
 
 export const QuestionUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuestionUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2067,7 +2067,7 @@ export const QuestionUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuestionUn
 }).strict();
 
 export const QuizAttemptCreateInputSchema: z.ZodType<Prisma.QuizAttemptCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
   startedAt: z.coerce.date().optional(),
@@ -2080,7 +2080,7 @@ export const QuizAttemptCreateInputSchema: z.ZodType<Prisma.QuizAttemptCreateInp
 }).strict();
 
 export const QuizAttemptUncheckedCreateInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string(),
   quizId: z.string(),
   score: z.number().optional().nullable(),
@@ -2093,7 +2093,7 @@ export const QuizAttemptUncheckedCreateInputSchema: z.ZodType<Prisma.QuizAttempt
 }).strict();
 
 export const QuizAttemptUpdateInputSchema: z.ZodType<Prisma.QuizAttemptUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
   startedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2106,7 +2106,7 @@ export const QuizAttemptUpdateInputSchema: z.ZodType<Prisma.QuizAttemptUpdateInp
 }).strict();
 
 export const QuizAttemptUncheckedUpdateInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2119,7 +2119,7 @@ export const QuizAttemptUncheckedUpdateInputSchema: z.ZodType<Prisma.QuizAttempt
 }).strict();
 
 export const QuizAttemptCreateManyInputSchema: z.ZodType<Prisma.QuizAttemptCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string(),
   quizId: z.string(),
   score: z.number().optional().nullable(),
@@ -2131,7 +2131,7 @@ export const QuizAttemptCreateManyInputSchema: z.ZodType<Prisma.QuizAttemptCreat
 }).strict();
 
 export const QuizAttemptUpdateManyMutationInputSchema: z.ZodType<Prisma.QuizAttemptUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
   startedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2141,7 +2141,7 @@ export const QuizAttemptUpdateManyMutationInputSchema: z.ZodType<Prisma.QuizAtte
 }).strict();
 
 export const QuizAttemptUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2153,7 +2153,7 @@ export const QuizAttemptUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QuizAtt
 }).strict();
 
 export const UserQuizResponseCreateInputSchema: z.ZodType<Prisma.UserQuizResponseCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
   submittedAt: z.coerce.date().optional().nullable(),
@@ -2163,7 +2163,7 @@ export const UserQuizResponseCreateInputSchema: z.ZodType<Prisma.UserQuizRespons
 }).strict();
 
 export const UserQuizResponseUncheckedCreateInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedCreateInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizAttemptId: z.string(),
   questionId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
@@ -2173,7 +2173,7 @@ export const UserQuizResponseUncheckedCreateInputSchema: z.ZodType<Prisma.UserQu
 }).strict();
 
 export const UserQuizResponseUpdateInputSchema: z.ZodType<Prisma.UserQuizResponseUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   submittedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2183,7 +2183,7 @@ export const UserQuizResponseUpdateInputSchema: z.ZodType<Prisma.UserQuizRespons
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizAttemptId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   questionId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
@@ -2193,7 +2193,7 @@ export const UserQuizResponseUncheckedUpdateInputSchema: z.ZodType<Prisma.UserQu
 }).strict();
 
 export const UserQuizResponseCreateManyInputSchema: z.ZodType<Prisma.UserQuizResponseCreateManyInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizAttemptId: z.string(),
   questionId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
@@ -2203,7 +2203,7 @@ export const UserQuizResponseCreateManyInputSchema: z.ZodType<Prisma.UserQuizRes
 }).strict();
 
 export const UserQuizResponseUpdateManyMutationInputSchema: z.ZodType<Prisma.UserQuizResponseUpdateManyMutationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   submittedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2211,7 +2211,7 @@ export const UserQuizResponseUpdateManyMutationInputSchema: z.ZodType<Prisma.Use
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateManyInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizAttemptId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   questionId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
@@ -2404,17 +2404,17 @@ export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAg
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
 }).strict();
 
-export const UserNullableRelationFilterSchema: z.ZodType<Prisma.UserNullableRelationFilter> = z.object({
+export const UserNullableScalarRelationFilterSchema: z.ZodType<Prisma.UserNullableScalarRelationFilter> = z.object({
   is: z.lazy(() => UserWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => UserWhereInputSchema).optional().nullable()
 }).strict();
 
-export const LLModelNullableRelationFilterSchema: z.ZodType<Prisma.LLModelNullableRelationFilter> = z.object({
+export const LLModelNullableScalarRelationFilterSchema: z.ZodType<Prisma.LLModelNullableScalarRelationFilter> = z.object({
   is: z.lazy(() => LLModelWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => LLModelWhereInputSchema).optional().nullable()
 }).strict();
 
-export const CourseNullableRelationFilterSchema: z.ZodType<Prisma.CourseNullableRelationFilter> = z.object({
+export const CourseNullableScalarRelationFilterSchema: z.ZodType<Prisma.CourseNullableScalarRelationFilter> = z.object({
   is: z.lazy(() => CourseWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => CourseWhereInputSchema).optional().nullable()
 }).strict();
@@ -2549,12 +2549,13 @@ export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
 export const JsonFilterSchema: z.ZodType<Prisma.JsonFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -2562,7 +2563,7 @@ export const JsonFilterSchema: z.ZodType<Prisma.JsonFilter> = z.object({
   not: InputJsonValueSchema.optional()
 }).strict();
 
-export const ConversationRelationFilterSchema: z.ZodType<Prisma.ConversationRelationFilter> = z.object({
+export const ConversationScalarRelationFilterSchema: z.ZodType<Prisma.ConversationScalarRelationFilter> = z.object({
   is: z.lazy(() => ConversationWhereInputSchema).optional(),
   isNot: z.lazy(() => ConversationWhereInputSchema).optional()
 }).strict();
@@ -2600,12 +2601,13 @@ export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregates
 export const JsonWithAggregatesFilterSchema: z.ZodType<Prisma.JsonWithAggregatesFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -2616,12 +2618,12 @@ export const JsonWithAggregatesFilterSchema: z.ZodType<Prisma.JsonWithAggregates
   _max: z.lazy(() => NestedJsonFilterSchema).optional()
 }).strict();
 
-export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
+export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelationFilter> = z.object({
   is: z.lazy(() => UserWhereInputSchema).optional(),
   isNot: z.lazy(() => UserWhereInputSchema).optional()
 }).strict();
 
-export const ConversationNullableRelationFilterSchema: z.ZodType<Prisma.ConversationNullableRelationFilter> = z.object({
+export const ConversationNullableScalarRelationFilterSchema: z.ZodType<Prisma.ConversationNullableScalarRelationFilter> = z.object({
   is: z.lazy(() => ConversationWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => ConversationWhereInputSchema).optional().nullable()
 }).strict();
@@ -2701,12 +2703,13 @@ export const StringNullableListFilterSchema: z.ZodType<Prisma.StringNullableList
 export const JsonNullableFilterSchema: z.ZodType<Prisma.JsonNullableFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -2714,7 +2717,7 @@ export const JsonNullableFilterSchema: z.ZodType<Prisma.JsonNullableFilter> = z.
   not: InputJsonValueSchema.optional()
 }).strict();
 
-export const CourseRelationFilterSchema: z.ZodType<Prisma.CourseRelationFilter> = z.object({
+export const CourseScalarRelationFilterSchema: z.ZodType<Prisma.CourseScalarRelationFilter> = z.object({
   is: z.lazy(() => CourseWhereInputSchema).optional(),
   isNot: z.lazy(() => CourseWhereInputSchema).optional()
 }).strict();
@@ -2803,12 +2806,13 @@ export const EnumChapterStatusWithAggregatesFilterSchema: z.ZodType<Prisma.EnumC
 export const JsonNullableWithAggregatesFilterSchema: z.ZodType<Prisma.JsonNullableWithAggregatesFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -2826,7 +2830,7 @@ export const EnumQuizTypeNullableFilterSchema: z.ZodType<Prisma.EnumQuizTypeNull
   not: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NestedEnumQuizTypeNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
-export const ChapterRelationFilterSchema: z.ZodType<Prisma.ChapterRelationFilter> = z.object({
+export const ChapterScalarRelationFilterSchema: z.ZodType<Prisma.ChapterScalarRelationFilter> = z.object({
   is: z.lazy(() => ChapterWhereInputSchema).optional(),
   isNot: z.lazy(() => ChapterWhereInputSchema).optional()
 }).strict();
@@ -2885,7 +2889,7 @@ export const EnumQuizTypeFilterSchema: z.ZodType<Prisma.EnumQuizTypeFilter> = z.
   not: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NestedEnumQuizTypeFilterSchema) ]).optional(),
 }).strict();
 
-export const QuizRelationFilterSchema: z.ZodType<Prisma.QuizRelationFilter> = z.object({
+export const QuizScalarRelationFilterSchema: z.ZodType<Prisma.QuizScalarRelationFilter> = z.object({
   is: z.lazy(() => QuizWhereInputSchema).optional(),
   isNot: z.lazy(() => QuizWhereInputSchema).optional()
 }).strict();
@@ -3047,12 +3051,12 @@ export const BoolNullableFilterSchema: z.ZodType<Prisma.BoolNullableFilter> = z.
   not: z.union([ z.boolean(),z.lazy(() => NestedBoolNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
-export const QuizAttemptRelationFilterSchema: z.ZodType<Prisma.QuizAttemptRelationFilter> = z.object({
+export const QuizAttemptScalarRelationFilterSchema: z.ZodType<Prisma.QuizAttemptScalarRelationFilter> = z.object({
   is: z.lazy(() => QuizAttemptWhereInputSchema).optional(),
   isNot: z.lazy(() => QuizAttemptWhereInputSchema).optional()
 }).strict();
 
-export const QuestionRelationFilterSchema: z.ZodType<Prisma.QuestionRelationFilter> = z.object({
+export const QuestionScalarRelationFilterSchema: z.ZodType<Prisma.QuestionScalarRelationFilter> = z.object({
   is: z.lazy(() => QuestionWhereInputSchema).optional(),
   isNot: z.lazy(() => QuestionWhereInputSchema).optional()
 }).strict();
@@ -4037,12 +4041,13 @@ export const NestedBoolWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBoolWi
 export const NestedJsonFilterSchema: z.ZodType<Prisma.NestedJsonFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -4097,12 +4102,13 @@ export const NestedEnumChapterStatusWithAggregatesFilterSchema: z.ZodType<Prisma
 export const NestedJsonNullableFilterSchema: z.ZodType<Prisma.NestedJsonNullableFilter> = z.object({
   equals: InputJsonValueSchema.optional(),
   path: z.string().array().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
   string_contains: z.string().optional(),
   string_starts_with: z.string().optional(),
   string_ends_with: z.string().optional(),
-  array_contains: InputJsonValueSchema.optional().nullable(),
   array_starts_with: InputJsonValueSchema.optional().nullable(),
   array_ends_with: InputJsonValueSchema.optional().nullable(),
+  array_contains: InputJsonValueSchema.optional().nullable(),
   lt: InputJsonValueSchema.optional(),
   lte: InputJsonValueSchema.optional(),
   gt: InputJsonValueSchema.optional(),
@@ -4191,7 +4197,7 @@ export const NestedBoolNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Nest
 }).strict();
 
 export const CourseCreateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseCreateWithoutCreatorInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   topic: z.string(),
   goal: z.string(),
   title: z.string().optional().nullable(),
@@ -4203,7 +4209,7 @@ export const CourseCreateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseCreat
 }).strict();
 
 export const CourseUncheckedCreateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseUncheckedCreateWithoutCreatorInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   conversationId: z.string().optional().nullable(),
   topic: z.string(),
   goal: z.string(),
@@ -4225,7 +4231,7 @@ export const CourseCreateManyCreatorInputEnvelopeSchema: z.ZodType<Prisma.Course
 }).strict();
 
 export const QuizAttemptCreateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttemptCreateWithoutUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
   startedAt: z.coerce.date().optional(),
@@ -4237,7 +4243,7 @@ export const QuizAttemptCreateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttem
 }).strict();
 
 export const QuizAttemptUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedCreateWithoutUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId: z.string(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
@@ -4259,7 +4265,7 @@ export const QuizAttemptCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.Quiz
 }).strict();
 
 export const ConversationCreateWithoutUserInputSchema: z.ZodType<Prisma.ConversationCreateWithoutUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   lastUpdate: z.coerce.date().optional(),
@@ -4270,7 +4276,7 @@ export const ConversationCreateWithoutUserInputSchema: z.ZodType<Prisma.Conversa
 }).strict();
 
 export const ConversationUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   aiModelId: z.string().optional().nullable(),
@@ -4413,7 +4419,7 @@ export const UserCreateOrConnectWithoutConversationsInputSchema: z.ZodType<Prism
 }).strict();
 
 export const LLModelCreateWithoutConversationsInputSchema: z.ZodType<Prisma.LLModelCreateWithoutConversationsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   provider: z.lazy(() => LLMProviderSchema),
   modelName: z.string(),
   displayName: z.string().optional().nullable(),
@@ -4423,7 +4429,7 @@ export const LLModelCreateWithoutConversationsInputSchema: z.ZodType<Prisma.LLMo
 }).strict();
 
 export const LLModelUncheckedCreateWithoutConversationsInputSchema: z.ZodType<Prisma.LLModelUncheckedCreateWithoutConversationsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   provider: z.lazy(() => LLMProviderSchema),
   modelName: z.string(),
   displayName: z.string().optional().nullable(),
@@ -4438,7 +4444,7 @@ export const LLModelCreateOrConnectWithoutConversationsInputSchema: z.ZodType<Pr
 }).strict();
 
 export const CourseCreateWithoutConversationInputSchema: z.ZodType<Prisma.CourseCreateWithoutConversationInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   topic: z.string(),
   goal: z.string(),
   title: z.string().optional().nullable(),
@@ -4450,7 +4456,7 @@ export const CourseCreateWithoutConversationInputSchema: z.ZodType<Prisma.Course
 }).strict();
 
 export const CourseUncheckedCreateWithoutConversationInputSchema: z.ZodType<Prisma.CourseUncheckedCreateWithoutConversationInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   creatorId: z.string(),
   topic: z.string(),
   goal: z.string(),
@@ -4467,14 +4473,14 @@ export const CourseCreateOrConnectWithoutConversationInputSchema: z.ZodType<Pris
 }).strict();
 
 export const MessageCreateWithoutConversationInputSchema: z.ZodType<Prisma.MessageCreateWithoutConversationInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   timestamp: z.coerce.date().optional()
 }).strict();
 
 export const MessageUncheckedCreateWithoutConversationInputSchema: z.ZodType<Prisma.MessageUncheckedCreateWithoutConversationInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   timestamp: z.coerce.date().optional()
@@ -4539,7 +4545,7 @@ export const LLModelUpdateToOneWithWhereWithoutConversationsInputSchema: z.ZodTy
 }).strict();
 
 export const LLModelUpdateWithoutConversationsInputSchema: z.ZodType<Prisma.LLModelUpdateWithoutConversationsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4549,7 +4555,7 @@ export const LLModelUpdateWithoutConversationsInputSchema: z.ZodType<Prisma.LLMo
 }).strict();
 
 export const LLModelUncheckedUpdateWithoutConversationsInputSchema: z.ZodType<Prisma.LLModelUncheckedUpdateWithoutConversationsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   provider: z.union([ z.lazy(() => LLMProviderSchema),z.lazy(() => EnumLLMProviderFieldUpdateOperationsInputSchema) ]).optional(),
   modelName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   displayName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4570,7 +4576,7 @@ export const CourseUpdateToOneWithWhereWithoutConversationInputSchema: z.ZodType
 }).strict();
 
 export const CourseUpdateWithoutConversationInputSchema: z.ZodType<Prisma.CourseUpdateWithoutConversationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4582,7 +4588,7 @@ export const CourseUpdateWithoutConversationInputSchema: z.ZodType<Prisma.Course
 }).strict();
 
 export const CourseUncheckedUpdateWithoutConversationInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateWithoutConversationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   creatorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4621,7 +4627,7 @@ export const MessageScalarWhereInputSchema: z.ZodType<Prisma.MessageScalarWhereI
 }).strict();
 
 export const ConversationCreateWithoutAiModelInputSchema: z.ZodType<Prisma.ConversationCreateWithoutAiModelInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   lastUpdate: z.coerce.date().optional(),
@@ -4632,7 +4638,7 @@ export const ConversationCreateWithoutAiModelInputSchema: z.ZodType<Prisma.Conve
 }).strict();
 
 export const ConversationUncheckedCreateWithoutAiModelInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutAiModelInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -4669,7 +4675,7 @@ export const ConversationUpdateManyWithWhereWithoutAiModelInputSchema: z.ZodType
 }).strict();
 
 export const ConversationCreateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationCreateWithoutMessagesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   lastUpdate: z.coerce.date().optional(),
@@ -4680,7 +4686,7 @@ export const ConversationCreateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
 }).strict();
 
 export const ConversationUncheckedCreateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutMessagesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -4707,7 +4713,7 @@ export const ConversationUpdateToOneWithWhereWithoutMessagesInputSchema: z.ZodTy
 }).strict();
 
 export const ConversationUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutMessagesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4718,7 +4724,7 @@ export const ConversationUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
 }).strict();
 
 export const ConversationUncheckedUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutMessagesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4760,7 +4766,7 @@ export const UserCreateOrConnectWithoutCoursesInputSchema: z.ZodType<Prisma.User
 }).strict();
 
 export const ConversationCreateWithoutCourseInputSchema: z.ZodType<Prisma.ConversationCreateWithoutCourseInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   lastUpdate: z.coerce.date().optional(),
@@ -4771,7 +4777,7 @@ export const ConversationCreateWithoutCourseInputSchema: z.ZodType<Prisma.Conver
 }).strict();
 
 export const ConversationUncheckedCreateWithoutCourseInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutCourseInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -4787,7 +4793,7 @@ export const ConversationCreateOrConnectWithoutCourseInputSchema: z.ZodType<Pris
 }).strict();
 
 export const ChapterCreateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterCreateWithoutCourseInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
   status: z.lazy(() => ChapterStatusSchema).optional(),
@@ -4799,7 +4805,7 @@ export const ChapterCreateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterCrea
 }).strict();
 
 export const ChapterUncheckedCreateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterUncheckedCreateWithoutCourseInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
   status: z.lazy(() => ChapterStatusSchema).optional(),
@@ -4869,7 +4875,7 @@ export const ConversationUpdateToOneWithWhereWithoutCourseInputSchema: z.ZodType
 }).strict();
 
 export const ConversationUpdateWithoutCourseInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutCourseInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4880,7 +4886,7 @@ export const ConversationUpdateWithoutCourseInputSchema: z.ZodType<Prisma.Conver
 }).strict();
 
 export const ConversationUncheckedUpdateWithoutCourseInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutCourseInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4922,7 +4928,7 @@ export const ChapterScalarWhereInputSchema: z.ZodType<Prisma.ChapterScalarWhereI
 }).strict();
 
 export const CourseCreateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseCreateWithoutChaptersInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   topic: z.string(),
   goal: z.string(),
   title: z.string().optional().nullable(),
@@ -4934,7 +4940,7 @@ export const CourseCreateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseCrea
 }).strict();
 
 export const CourseUncheckedCreateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseUncheckedCreateWithoutChaptersInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   creatorId: z.string(),
   conversationId: z.string().optional().nullable(),
   topic: z.string(),
@@ -4951,7 +4957,7 @@ export const CourseCreateOrConnectWithoutChaptersInputSchema: z.ZodType<Prisma.C
 }).strict();
 
 export const QuizCreateWithoutChapterInputSchema: z.ZodType<Prisma.QuizCreateWithoutChapterInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -4961,7 +4967,7 @@ export const QuizCreateWithoutChapterInputSchema: z.ZodType<Prisma.QuizCreateWit
 }).strict();
 
 export const QuizUncheckedCreateWithoutChapterInputSchema: z.ZodType<Prisma.QuizUncheckedCreateWithoutChapterInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -4992,7 +4998,7 @@ export const CourseUpdateToOneWithWhereWithoutChaptersInputSchema: z.ZodType<Pri
 }).strict();
 
 export const CourseUpdateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseUpdateWithoutChaptersInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5004,7 +5010,7 @@ export const CourseUpdateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseUpda
 }).strict();
 
 export const CourseUncheckedUpdateWithoutChaptersInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateWithoutChaptersInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   creatorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5044,7 +5050,7 @@ export const QuizScalarWhereInputSchema: z.ZodType<Prisma.QuizScalarWhereInput> 
 }).strict();
 
 export const ChapterCreateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterCreateWithoutQuizzesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
   status: z.lazy(() => ChapterStatusSchema).optional(),
@@ -5056,7 +5062,7 @@ export const ChapterCreateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterCre
 }).strict();
 
 export const ChapterUncheckedCreateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterUncheckedCreateWithoutQuizzesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
@@ -5073,7 +5079,7 @@ export const ChapterCreateOrConnectWithoutQuizzesInputSchema: z.ZodType<Prisma.C
 }).strict();
 
 export const QuestionCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionCreateWithoutQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
   text: z.string(),
@@ -5084,7 +5090,7 @@ export const QuestionCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionCrea
 }).strict();
 
 export const QuestionUncheckedCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionUncheckedCreateWithoutQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
   text: z.string(),
@@ -5105,7 +5111,7 @@ export const QuestionCreateManyQuizInputEnvelopeSchema: z.ZodType<Prisma.Questio
 }).strict();
 
 export const QuizAttemptCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttemptCreateWithoutQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
   startedAt: z.coerce.date().optional(),
@@ -5117,7 +5123,7 @@ export const QuizAttemptCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttem
 }).strict();
 
 export const QuizAttemptUncheckedCreateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedCreateWithoutQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
@@ -5150,7 +5156,7 @@ export const ChapterUpdateToOneWithWhereWithoutQuizzesInputSchema: z.ZodType<Pri
 }).strict();
 
 export const ChapterUpdateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterUpdateWithoutQuizzesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5162,7 +5168,7 @@ export const ChapterUpdateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterUpd
 }).strict();
 
 export const ChapterUncheckedUpdateWithoutQuizzesInputSchema: z.ZodType<Prisma.ChapterUncheckedUpdateWithoutQuizzesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5220,7 +5226,7 @@ export const QuizAttemptUpdateManyWithWhereWithoutQuizInputSchema: z.ZodType<Pri
 }).strict();
 
 export const QuizCreateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizCreateWithoutQuestionsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5230,7 +5236,7 @@ export const QuizCreateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizCreateW
 }).strict();
 
 export const QuizUncheckedCreateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizUncheckedCreateWithoutQuestionsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   chapterId: z.string(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
@@ -5245,7 +5251,7 @@ export const QuizCreateOrConnectWithoutQuestionsInputSchema: z.ZodType<Prisma.Qu
 }).strict();
 
 export const UserQuizResponseCreateWithoutQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseCreateWithoutQuestionInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
   submittedAt: z.coerce.date().optional().nullable(),
@@ -5254,7 +5260,7 @@ export const UserQuizResponseCreateWithoutQuestionInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const UserQuizResponseUncheckedCreateWithoutQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedCreateWithoutQuestionInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizAttemptId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
@@ -5284,7 +5290,7 @@ export const QuizUpdateToOneWithWhereWithoutQuestionsInputSchema: z.ZodType<Pris
 }).strict();
 
 export const QuizUpdateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizUpdateWithoutQuestionsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5294,7 +5300,7 @@ export const QuizUpdateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizUpdateW
 }).strict();
 
 export const QuizUncheckedUpdateWithoutQuestionsInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateWithoutQuestionsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chapterId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5364,7 +5370,7 @@ export const UserCreateOrConnectWithoutQuizAttemptsInputSchema: z.ZodType<Prisma
 }).strict();
 
 export const QuizCreateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizCreateWithoutAttemptsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5374,7 +5380,7 @@ export const QuizCreateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizCreateWi
 }).strict();
 
 export const QuizUncheckedCreateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizUncheckedCreateWithoutAttemptsInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   chapterId: z.string(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
@@ -5389,7 +5395,7 @@ export const QuizCreateOrConnectWithoutAttemptsInputSchema: z.ZodType<Prisma.Qui
 }).strict();
 
 export const UserQuizResponseCreateWithoutQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseCreateWithoutQuizAttemptInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
   submittedAt: z.coerce.date().optional().nullable(),
@@ -5398,7 +5404,7 @@ export const UserQuizResponseCreateWithoutQuizAttemptInputSchema: z.ZodType<Pris
 }).strict();
 
 export const UserQuizResponseUncheckedCreateWithoutQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedCreateWithoutQuizAttemptInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   questionId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
@@ -5465,7 +5471,7 @@ export const QuizUpdateToOneWithWhereWithoutAttemptsInputSchema: z.ZodType<Prism
 }).strict();
 
 export const QuizUpdateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizUpdateWithoutAttemptsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5475,7 +5481,7 @@ export const QuizUpdateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizUpdateWi
 }).strict();
 
 export const QuizUncheckedUpdateWithoutAttemptsInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateWithoutAttemptsInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chapterId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5501,7 +5507,7 @@ export const UserQuizResponseUpdateManyWithWhereWithoutQuizAttemptInputSchema: z
 }).strict();
 
 export const QuizAttemptCreateWithoutResponsesInputSchema: z.ZodType<Prisma.QuizAttemptCreateWithoutResponsesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
   startedAt: z.coerce.date().optional(),
@@ -5513,7 +5519,7 @@ export const QuizAttemptCreateWithoutResponsesInputSchema: z.ZodType<Prisma.Quiz
 }).strict();
 
 export const QuizAttemptUncheckedCreateWithoutResponsesInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedCreateWithoutResponsesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string(),
   quizId: z.string(),
   score: z.number().optional().nullable(),
@@ -5530,7 +5536,7 @@ export const QuizAttemptCreateOrConnectWithoutResponsesInputSchema: z.ZodType<Pr
 }).strict();
 
 export const QuestionCreateWithoutResponsesInputSchema: z.ZodType<Prisma.QuestionCreateWithoutResponsesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
   text: z.string(),
@@ -5541,7 +5547,7 @@ export const QuestionCreateWithoutResponsesInputSchema: z.ZodType<Prisma.Questio
 }).strict();
 
 export const QuestionUncheckedCreateWithoutResponsesInputSchema: z.ZodType<Prisma.QuestionUncheckedCreateWithoutResponsesInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId: z.string(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
@@ -5568,7 +5574,7 @@ export const QuizAttemptUpdateToOneWithWhereWithoutResponsesInputSchema: z.ZodTy
 }).strict();
 
 export const QuizAttemptUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.QuizAttemptUpdateWithoutResponsesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
   startedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5580,7 +5586,7 @@ export const QuizAttemptUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.Quiz
 }).strict();
 
 export const QuizAttemptUncheckedUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateWithoutResponsesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5603,7 +5609,7 @@ export const QuestionUpdateToOneWithWhereWithoutResponsesInputSchema: z.ZodType<
 }).strict();
 
 export const QuestionUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.QuestionUpdateWithoutResponsesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5614,7 +5620,7 @@ export const QuestionUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.Questio
 }).strict();
 
 export const QuestionUncheckedUpdateWithoutResponsesInputSchema: z.ZodType<Prisma.QuestionUncheckedUpdateWithoutResponsesInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5625,7 +5631,7 @@ export const QuestionUncheckedUpdateWithoutResponsesInputSchema: z.ZodType<Prism
 }).strict();
 
 export const CourseCreateManyCreatorInputSchema: z.ZodType<Prisma.CourseCreateManyCreatorInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   conversationId: z.string().optional().nullable(),
   topic: z.string(),
   goal: z.string(),
@@ -5636,7 +5642,7 @@ export const CourseCreateManyCreatorInputSchema: z.ZodType<Prisma.CourseCreateMa
 }).strict();
 
 export const QuizAttemptCreateManyUserInputSchema: z.ZodType<Prisma.QuizAttemptCreateManyUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizId: z.string(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
@@ -5647,7 +5653,7 @@ export const QuizAttemptCreateManyUserInputSchema: z.ZodType<Prisma.QuizAttemptC
 }).strict();
 
 export const ConversationCreateManyUserInputSchema: z.ZodType<Prisma.ConversationCreateManyUserInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
   aiModelId: z.string().optional().nullable(),
@@ -5656,7 +5662,7 @@ export const ConversationCreateManyUserInputSchema: z.ZodType<Prisma.Conversatio
 }).strict();
 
 export const CourseUpdateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseUpdateWithoutCreatorInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5668,7 +5674,7 @@ export const CourseUpdateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseUpdat
 }).strict();
 
 export const CourseUncheckedUpdateWithoutCreatorInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateWithoutCreatorInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5680,7 +5686,7 @@ export const CourseUncheckedUpdateWithoutCreatorInputSchema: z.ZodType<Prisma.Co
 }).strict();
 
 export const CourseUncheckedUpdateManyWithoutCreatorInputSchema: z.ZodType<Prisma.CourseUncheckedUpdateManyWithoutCreatorInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   conversationId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   topic: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   goal: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5691,7 +5697,7 @@ export const CourseUncheckedUpdateManyWithoutCreatorInputSchema: z.ZodType<Prism
 }).strict();
 
 export const QuizAttemptUpdateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttemptUpdateWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
   startedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5703,7 +5709,7 @@ export const QuizAttemptUpdateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttem
 }).strict();
 
 export const QuizAttemptUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5715,7 +5721,7 @@ export const QuizAttemptUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const QuizAttemptUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateManyWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5726,7 +5732,7 @@ export const QuizAttemptUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Pri
 }).strict();
 
 export const ConversationUpdateWithoutUserInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5737,7 +5743,7 @@ export const ConversationUpdateWithoutUserInputSchema: z.ZodType<Prisma.Conversa
 }).strict();
 
 export const ConversationUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   aiModelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5748,7 +5754,7 @@ export const ConversationUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma
 }).strict();
 
 export const ConversationUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyWithoutUserInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   aiModelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5757,35 +5763,35 @@ export const ConversationUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Pr
 }).strict();
 
 export const MessageCreateManyConversationInputSchema: z.ZodType<Prisma.MessageCreateManyConversationInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   isUser: z.boolean(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   timestamp: z.coerce.date().optional()
 }).strict();
 
 export const MessageUpdateWithoutConversationInputSchema: z.ZodType<Prisma.MessageUpdateWithoutConversationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MessageUncheckedUpdateWithoutConversationInputSchema: z.ZodType<Prisma.MessageUncheckedUpdateWithoutConversationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MessageUncheckedUpdateManyWithoutConversationInputSchema: z.ZodType<Prisma.MessageUncheckedUpdateManyWithoutConversationInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isUser: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   parts: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ConversationCreateManyAiModelInputSchema: z.ZodType<Prisma.ConversationCreateManyAiModelInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string().optional().nullable(),
   courseId: z.string().optional().nullable(),
   systemPrompt: z.string().optional().nullable(),
@@ -5794,7 +5800,7 @@ export const ConversationCreateManyAiModelInputSchema: z.ZodType<Prisma.Conversa
 }).strict();
 
 export const ConversationUpdateWithoutAiModelInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutAiModelInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   lastUpdate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5805,7 +5811,7 @@ export const ConversationUpdateWithoutAiModelInputSchema: z.ZodType<Prisma.Conve
 }).strict();
 
 export const ConversationUncheckedUpdateWithoutAiModelInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutAiModelInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5816,7 +5822,7 @@ export const ConversationUncheckedUpdateWithoutAiModelInputSchema: z.ZodType<Pri
 }).strict();
 
 export const ConversationUncheckedUpdateManyWithoutAiModelInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyWithoutAiModelInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   courseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   systemPrompt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5825,7 +5831,7 @@ export const ConversationUncheckedUpdateManyWithoutAiModelInputSchema: z.ZodType
 }).strict();
 
 export const ChapterCreateManyCourseInputSchema: z.ZodType<Prisma.ChapterCreateManyCourseInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   order: z.number().int(),
   status: z.lazy(() => ChapterStatusSchema).optional(),
@@ -5836,7 +5842,7 @@ export const ChapterCreateManyCourseInputSchema: z.ZodType<Prisma.ChapterCreateM
 }).strict();
 
 export const ChapterUpdateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterUpdateWithoutCourseInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5848,7 +5854,7 @@ export const ChapterUpdateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterUpda
 }).strict();
 
 export const ChapterUncheckedUpdateWithoutCourseInputSchema: z.ZodType<Prisma.ChapterUncheckedUpdateWithoutCourseInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5860,7 +5866,7 @@ export const ChapterUncheckedUpdateWithoutCourseInputSchema: z.ZodType<Prisma.Ch
 }).strict();
 
 export const ChapterUncheckedUpdateManyWithoutCourseInputSchema: z.ZodType<Prisma.ChapterUncheckedUpdateManyWithoutCourseInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => ChapterStatusSchema),z.lazy(() => EnumChapterStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5871,7 +5877,7 @@ export const ChapterUncheckedUpdateManyWithoutCourseInputSchema: z.ZodType<Prism
 }).strict();
 
 export const QuizCreateManyChapterInputSchema: z.ZodType<Prisma.QuizCreateManyChapterInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   title: z.string().optional().nullable(),
   quizType: z.lazy(() => QuizTypeSchema).optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5879,7 +5885,7 @@ export const QuizCreateManyChapterInputSchema: z.ZodType<Prisma.QuizCreateManyCh
 }).strict();
 
 export const QuizUpdateWithoutChapterInputSchema: z.ZodType<Prisma.QuizUpdateWithoutChapterInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5889,7 +5895,7 @@ export const QuizUpdateWithoutChapterInputSchema: z.ZodType<Prisma.QuizUpdateWit
 }).strict();
 
 export const QuizUncheckedUpdateWithoutChapterInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateWithoutChapterInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5899,7 +5905,7 @@ export const QuizUncheckedUpdateWithoutChapterInputSchema: z.ZodType<Prisma.Quiz
 }).strict();
 
 export const QuizUncheckedUpdateManyWithoutChapterInputSchema: z.ZodType<Prisma.QuizUncheckedUpdateManyWithoutChapterInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   title: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quizType: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => NullableEnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5907,7 +5913,7 @@ export const QuizUncheckedUpdateManyWithoutChapterInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const QuestionCreateManyQuizInputSchema: z.ZodType<Prisma.QuestionCreateManyQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   order: z.number().int(),
   type: z.lazy(() => QuizTypeSchema),
   text: z.string(),
@@ -5917,7 +5923,7 @@ export const QuestionCreateManyQuizInputSchema: z.ZodType<Prisma.QuestionCreateM
 }).strict();
 
 export const QuizAttemptCreateManyQuizInputSchema: z.ZodType<Prisma.QuizAttemptCreateManyQuizInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   userId: z.string(),
   score: z.number().optional().nullable(),
   status: z.lazy(() => QuizAttemptStatusSchema).optional(),
@@ -5928,7 +5934,7 @@ export const QuizAttemptCreateManyQuizInputSchema: z.ZodType<Prisma.QuizAttemptC
 }).strict();
 
 export const QuestionUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionUpdateWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5939,7 +5945,7 @@ export const QuestionUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionUpda
 }).strict();
 
 export const QuestionUncheckedUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuestionUncheckedUpdateWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5950,7 +5956,7 @@ export const QuestionUncheckedUpdateWithoutQuizInputSchema: z.ZodType<Prisma.Que
 }).strict();
 
 export const QuestionUncheckedUpdateManyWithoutQuizInputSchema: z.ZodType<Prisma.QuestionUncheckedUpdateManyWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => QuizTypeSchema),z.lazy(() => EnumQuizTypeFieldUpdateOperationsInputSchema) ]).optional(),
   text: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5960,7 +5966,7 @@ export const QuestionUncheckedUpdateManyWithoutQuizInputSchema: z.ZodType<Prisma
 }).strict();
 
 export const QuizAttemptUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttemptUpdateWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
   startedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5972,7 +5978,7 @@ export const QuizAttemptUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttem
 }).strict();
 
 export const QuizAttemptUncheckedUpdateWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5984,7 +5990,7 @@ export const QuizAttemptUncheckedUpdateWithoutQuizInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const QuizAttemptUncheckedUpdateManyWithoutQuizInputSchema: z.ZodType<Prisma.QuizAttemptUncheckedUpdateManyWithoutQuizInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   score: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => QuizAttemptStatusSchema),z.lazy(() => EnumQuizAttemptStatusFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5995,7 +6001,7 @@ export const QuizAttemptUncheckedUpdateManyWithoutQuizInputSchema: z.ZodType<Pri
 }).strict();
 
 export const UserQuizResponseCreateManyQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseCreateManyQuestionInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   quizAttemptId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
@@ -6004,7 +6010,7 @@ export const UserQuizResponseCreateManyQuestionInputSchema: z.ZodType<Prisma.Use
 }).strict();
 
 export const UserQuizResponseUpdateWithoutQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseUpdateWithoutQuestionInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   submittedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6013,7 +6019,7 @@ export const UserQuizResponseUpdateWithoutQuestionInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateWithoutQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateWithoutQuestionInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizAttemptId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6022,7 +6028,7 @@ export const UserQuizResponseUncheckedUpdateWithoutQuestionInputSchema: z.ZodTyp
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateManyWithoutQuestionInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateManyWithoutQuestionInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   quizAttemptId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6031,7 +6037,7 @@ export const UserQuizResponseUncheckedUpdateManyWithoutQuestionInputSchema: z.Zo
 }).strict();
 
 export const UserQuizResponseCreateManyQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseCreateManyQuizAttemptInput> = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   questionId: z.string(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]),
   isCorrect: z.boolean().optional().nullable(),
@@ -6040,7 +6046,7 @@ export const UserQuizResponseCreateManyQuizAttemptInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const UserQuizResponseUpdateWithoutQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseUpdateWithoutQuizAttemptInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   submittedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6049,7 +6055,7 @@ export const UserQuizResponseUpdateWithoutQuizAttemptInputSchema: z.ZodType<Pris
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateWithoutQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateWithoutQuizAttemptInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   questionId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6058,7 +6064,7 @@ export const UserQuizResponseUncheckedUpdateWithoutQuizAttemptInputSchema: z.Zod
 }).strict();
 
 export const UserQuizResponseUncheckedUpdateManyWithoutQuizAttemptInputSchema: z.ZodType<Prisma.UserQuizResponseUncheckedUpdateManyWithoutQuizAttemptInput> = z.object({
-  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   questionId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userAnswer: z.union([ z.lazy(() => JsonNullValueInputSchema),InputJsonValueSchema ]).optional(),
   isCorrect: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6730,10 +6736,18 @@ export const UserUpdateArgsSchema: z.ZodType<Prisma.UserUpdateArgs> = z.object({
 export const UserUpdateManyArgsSchema: z.ZodType<Prisma.UserUpdateManyArgs> = z.object({
   data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
   where: UserWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const UserUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.UserUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
+  where: UserWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserDeleteManyArgsSchema: z.ZodType<Prisma.UserDeleteManyArgs> = z.object({
   where: UserWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const ConversationCreateArgsSchema: z.ZodType<Prisma.ConversationCreateArgs> = z.object({
@@ -6776,10 +6790,18 @@ export const ConversationUpdateArgsSchema: z.ZodType<Prisma.ConversationUpdateAr
 export const ConversationUpdateManyArgsSchema: z.ZodType<Prisma.ConversationUpdateManyArgs> = z.object({
   data: z.union([ ConversationUpdateManyMutationInputSchema,ConversationUncheckedUpdateManyInputSchema ]),
   where: ConversationWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ConversationUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ConversationUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ ConversationUpdateManyMutationInputSchema,ConversationUncheckedUpdateManyInputSchema ]),
+  where: ConversationWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const ConversationDeleteManyArgsSchema: z.ZodType<Prisma.ConversationDeleteManyArgs> = z.object({
   where: ConversationWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const LLModelCreateArgsSchema: z.ZodType<Prisma.LLModelCreateArgs> = z.object({
@@ -6822,10 +6844,18 @@ export const LLModelUpdateArgsSchema: z.ZodType<Prisma.LLModelUpdateArgs> = z.ob
 export const LLModelUpdateManyArgsSchema: z.ZodType<Prisma.LLModelUpdateManyArgs> = z.object({
   data: z.union([ LLModelUpdateManyMutationInputSchema,LLModelUncheckedUpdateManyInputSchema ]),
   where: LLModelWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const LLModelUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.LLModelUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ LLModelUpdateManyMutationInputSchema,LLModelUncheckedUpdateManyInputSchema ]),
+  where: LLModelWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const LLModelDeleteManyArgsSchema: z.ZodType<Prisma.LLModelDeleteManyArgs> = z.object({
   where: LLModelWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const MessageCreateArgsSchema: z.ZodType<Prisma.MessageCreateArgs> = z.object({
@@ -6868,10 +6898,18 @@ export const MessageUpdateArgsSchema: z.ZodType<Prisma.MessageUpdateArgs> = z.ob
 export const MessageUpdateManyArgsSchema: z.ZodType<Prisma.MessageUpdateManyArgs> = z.object({
   data: z.union([ MessageUpdateManyMutationInputSchema,MessageUncheckedUpdateManyInputSchema ]),
   where: MessageWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const MessageUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.MessageUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ MessageUpdateManyMutationInputSchema,MessageUncheckedUpdateManyInputSchema ]),
+  where: MessageWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const MessageDeleteManyArgsSchema: z.ZodType<Prisma.MessageDeleteManyArgs> = z.object({
   where: MessageWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const CourseCreateArgsSchema: z.ZodType<Prisma.CourseCreateArgs> = z.object({
@@ -6914,10 +6952,18 @@ export const CourseUpdateArgsSchema: z.ZodType<Prisma.CourseUpdateArgs> = z.obje
 export const CourseUpdateManyArgsSchema: z.ZodType<Prisma.CourseUpdateManyArgs> = z.object({
   data: z.union([ CourseUpdateManyMutationInputSchema,CourseUncheckedUpdateManyInputSchema ]),
   where: CourseWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const CourseUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.CourseUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ CourseUpdateManyMutationInputSchema,CourseUncheckedUpdateManyInputSchema ]),
+  where: CourseWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const CourseDeleteManyArgsSchema: z.ZodType<Prisma.CourseDeleteManyArgs> = z.object({
   where: CourseWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const ChapterCreateArgsSchema: z.ZodType<Prisma.ChapterCreateArgs> = z.object({
@@ -6960,10 +7006,18 @@ export const ChapterUpdateArgsSchema: z.ZodType<Prisma.ChapterUpdateArgs> = z.ob
 export const ChapterUpdateManyArgsSchema: z.ZodType<Prisma.ChapterUpdateManyArgs> = z.object({
   data: z.union([ ChapterUpdateManyMutationInputSchema,ChapterUncheckedUpdateManyInputSchema ]),
   where: ChapterWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const ChapterUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ChapterUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ ChapterUpdateManyMutationInputSchema,ChapterUncheckedUpdateManyInputSchema ]),
+  where: ChapterWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const ChapterDeleteManyArgsSchema: z.ZodType<Prisma.ChapterDeleteManyArgs> = z.object({
   where: ChapterWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuizCreateArgsSchema: z.ZodType<Prisma.QuizCreateArgs> = z.object({
@@ -7006,10 +7060,18 @@ export const QuizUpdateArgsSchema: z.ZodType<Prisma.QuizUpdateArgs> = z.object({
 export const QuizUpdateManyArgsSchema: z.ZodType<Prisma.QuizUpdateManyArgs> = z.object({
   data: z.union([ QuizUpdateManyMutationInputSchema,QuizUncheckedUpdateManyInputSchema ]),
   where: QuizWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const QuizUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.QuizUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ QuizUpdateManyMutationInputSchema,QuizUncheckedUpdateManyInputSchema ]),
+  where: QuizWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuizDeleteManyArgsSchema: z.ZodType<Prisma.QuizDeleteManyArgs> = z.object({
   where: QuizWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuestionCreateArgsSchema: z.ZodType<Prisma.QuestionCreateArgs> = z.object({
@@ -7052,10 +7114,18 @@ export const QuestionUpdateArgsSchema: z.ZodType<Prisma.QuestionUpdateArgs> = z.
 export const QuestionUpdateManyArgsSchema: z.ZodType<Prisma.QuestionUpdateManyArgs> = z.object({
   data: z.union([ QuestionUpdateManyMutationInputSchema,QuestionUncheckedUpdateManyInputSchema ]),
   where: QuestionWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const QuestionUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.QuestionUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ QuestionUpdateManyMutationInputSchema,QuestionUncheckedUpdateManyInputSchema ]),
+  where: QuestionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuestionDeleteManyArgsSchema: z.ZodType<Prisma.QuestionDeleteManyArgs> = z.object({
   where: QuestionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuizAttemptCreateArgsSchema: z.ZodType<Prisma.QuizAttemptCreateArgs> = z.object({
@@ -7098,10 +7168,18 @@ export const QuizAttemptUpdateArgsSchema: z.ZodType<Prisma.QuizAttemptUpdateArgs
 export const QuizAttemptUpdateManyArgsSchema: z.ZodType<Prisma.QuizAttemptUpdateManyArgs> = z.object({
   data: z.union([ QuizAttemptUpdateManyMutationInputSchema,QuizAttemptUncheckedUpdateManyInputSchema ]),
   where: QuizAttemptWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const QuizAttemptUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.QuizAttemptUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ QuizAttemptUpdateManyMutationInputSchema,QuizAttemptUncheckedUpdateManyInputSchema ]),
+  where: QuizAttemptWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const QuizAttemptDeleteManyArgsSchema: z.ZodType<Prisma.QuizAttemptDeleteManyArgs> = z.object({
   where: QuizAttemptWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserQuizResponseCreateArgsSchema: z.ZodType<Prisma.UserQuizResponseCreateArgs> = z.object({
@@ -7144,8 +7222,16 @@ export const UserQuizResponseUpdateArgsSchema: z.ZodType<Prisma.UserQuizResponse
 export const UserQuizResponseUpdateManyArgsSchema: z.ZodType<Prisma.UserQuizResponseUpdateManyArgs> = z.object({
   data: z.union([ UserQuizResponseUpdateManyMutationInputSchema,UserQuizResponseUncheckedUpdateManyInputSchema ]),
   where: UserQuizResponseWhereInputSchema.optional(),
+  limit: z.number().optional(),
+}).strict() ;
+
+export const UserQuizResponseUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.UserQuizResponseUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ UserQuizResponseUpdateManyMutationInputSchema,UserQuizResponseUncheckedUpdateManyInputSchema ]),
+  where: UserQuizResponseWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserQuizResponseDeleteManyArgsSchema: z.ZodType<Prisma.UserQuizResponseDeleteManyArgs> = z.object({
   where: UserQuizResponseWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;

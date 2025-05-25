@@ -10,6 +10,5 @@ node_modules/
 *.tfstate
 *.tfstate.backup
 .pnp.js
-*.json
 .yarn/
 prisma/generated

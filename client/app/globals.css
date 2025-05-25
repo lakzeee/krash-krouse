@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,29 +43,33 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --background: oklch(0.145 0 0); /* Very Dark */
+  --foreground: oklch(0.985 0 0); /* Very Light */
+  --card: oklch(0.205 0 0); /* Dark */
+  --card-foreground: oklch(0.985 0 0); /* Very Light */
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --primary: oklch(
+    0.922 0 0
+  ); /* Very light - suitable as a light accent text on dark BGs */
+  --primary-foreground: oklch(
+    0.205 0 0
+  ); /* Dark - suitable as text on light --primary BG */
+  --secondary: oklch(0.269 0 0); /* Dark */
+  --secondary-foreground: oklch(0.985 0 0); /* Very Light */
+  --muted: oklch(0.269 0 0); /* Dark */
+  --muted-foreground: oklch(0.708 0 0); /* Light (less so than foreground) */
+  --accent: oklch(0.269 0 0); /* Dark */
+  --accent-foreground: oklch(0.985 0 0); /* Very Light */
+  --destructive: oklch(0.704 0.191 22.216); /* Reddish, mid-light */
+  --border: oklch(1 0 0 / 10%); /* Light, transparent */
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --ring: oklch(0.556 0 0); /* Mid-tone gray */
+  --chart-1: oklch(0.488 0.243 264.376); /* Purple, mid-dark */
+  --chart-2: oklch(0.696 0.17 162.48); /* Green/Teal, mid-light */
+  --chart-3: oklch(0.769 0.188 70.08); /* Yellow, light */
+  --chart-4: oklch(0.627 0.265 303.9); /* Magenta, mid-light */
+  --chart-5: oklch(0.645 0.246 16.439); /* Orange, mid-light */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -78,41 +82,42 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50; /* Uses theme 'border' and 'ring' */
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground; /* Uses theme 'background' and 'foreground' */
   }
 
   h1 {
-    @apply text-3xl font-bold mb-4;
+    @apply mb-4 text-3xl font-bold;
   }
   h2 {
-    @apply text-2xl font-semibold mb-3;
+    @apply mb-3 text-2xl font-semibold;
   }
   h3 {
-    @apply text-xl font-semibold mb-2;
+    @apply mb-2 text-xl font-semibold;
   }
   p {
     @apply mb-4 text-base;
   }
 }
 
-  .container-wrapper {
-    @apply mx-auto md:max-w-7xl;
-  }
+.container-wrapper {
+  @apply mx-auto md:max-w-7xl;
+}
 
+.content-wrapper {
+  transition:
+    transform 0.3s ease-in-out,
+    border-radius 0.3s ease-in-out;
+  transform-origin: center;
+  transform: scale(1);
+  border-radius: 0px;
+  overflow: hidden;
+}
 
-  .content-wrapper {
-    transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out;
-    transform-origin: center;
-    transform: scale(1);
-    border-radius: 0px;
-    overflow: hidden;
-  }
-
-  .content-wrapper.shrunk {
-    transform: scale(0.95);
-    border-radius: 10px;
-  }
+.content-wrapper.shrunk {
+  transform: scale(0.95);
+  border-radius: 10px;
+}

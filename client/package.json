@@ -9,8 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate --no-engine",
-    "migrate": "prisma migrate dev",
-    "apply": "prisma migrate deploy"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:apply": "prisma migrate deploy",
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.18.5",
@@ -30,6 +32,7 @@
     "motion": "^12.9.7",
     "next": "15.3.1",
     "next-swagger-doc": "^0.4.1",
+    "prisma-openapi": "^1.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.2",

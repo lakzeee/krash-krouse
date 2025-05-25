@@ -1,4 +1,4 @@
-import { Conversation } from '@prisma/client';
+import { Conversation, Prisma } from '@prisma/client';
 import { NotFoundError } from '@/lib/errors/prisma';
 import { prisma } from '@/lib/prisma';
 
@@ -43,31 +43,17 @@ export class ConversationService {
    * @returns A promise resolving to the newly created Conversation object.
    */
   async createConversation(
-    userId: string,
-    aiModelId: string,
-    message: string,
-    systemPrompt?: string
+    input: Prisma.ConversationCreateInput
   ): Promise<Conversation> {
     console.log(
-      `Creating conversation for user ${userId} via ConversationService`
+      `Creating conversation for user ${input?.user?.connect?.id} via ConversationService`
     );
 
-    return prisma.$transaction(async (tx) => {
-      const conversation = await tx.conversation.create({
-        data: {
-          userId: userId,
-          aiModelId: aiModelId,
-          systemPrompt: systemPrompt,
-          messages: {
-            create: {
-              parts: JSON.stringify([{ text: message }]),
-              isUser: true,
-            },
-          },
-        },
-      });
-
-      return conversation;
+    return prisma.conversation.create({
+      data: input,
+      include: {
+        messages: true,
+      },
     });
   }
 

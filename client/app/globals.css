@@ -108,16 +108,14 @@
 }
 
 .content-wrapper {
-  transition:
-    transform 0.3s ease-in-out,
-    border-radius 0.3s ease-in-out;
-  transform-origin: center;
-  transform: scale(1);
-  border-radius: 0px;
-  overflow: hidden;
+  @apply origin-center scale-100 overflow-hidden rounded-none transition-transform duration-300 ease-in-out;
 }
 
 .content-wrapper.shrunk {
-  transform: scale(0.95);
-  border-radius: 10px;
+  @apply scale-95 rounded-lg;
+}
+
+/* Custom Swagger UI styles */
+.scheme-container {
+  background-color: var(--background) !important;
 }

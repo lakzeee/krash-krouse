@@ -1,33 +1,13 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { getLearningOptions } from '@/services/ai/google';
+import { ConversationService } from '@/services/prisma/ConversationService';
 import { withRouteErrorHandling } from '@/lib/helpers/api';
-import { getValidateAndSuggestGoalsPrompt } from '@/lib/prompts/newCourse';
+import {
+  DEFAULT_MODEL_ID,
+  getValidateAndSuggestGoalsPrompt,
+} from '@/lib/prompts/newCourse';
 import { NewCourseRequestBody, NewCourseRequestBodySchema } from '@/types/api';
-
-/**
- * @swagger
- * /api/conversation/new-course:
- *   get:
- *     summary: Health check endpoint
- *     description: Returns a simple hello world message to verify the API is working
- *     tags:
- *       - Health Check
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Hello world!"
- */
-export async function GET(request: NextRequest | Request) {
-  return NextResponse.json({ message: 'Hello world!' });
-}
 
 /**
  * @swagger
@@ -56,28 +36,8 @@ export async function GET(request: NextRequest | Request) {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               description: AI-generated learning options and suggestions
- *       400:
- *         description: Invalid request body
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Invalid request body"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Failed to generate learning options"
+ *               type: Conversation
+ *               description: Conversation object
  */
 export const POST = withRouteErrorHandling(
   async (request: NextRequest | Request) => {
@@ -85,18 +45,41 @@ export const POST = withRouteErrorHandling(
 
     const parsedBody = NewCourseRequestBodySchema.parse(body);
 
-    const prompt = getValidateAndSuggestGoalsPrompt(body.message);
+    const prompt = getValidateAndSuggestGoalsPrompt(parsedBody.message);
 
     const learningOptions = await getLearningOptions(prompt);
 
-    // const conversationService = new ConversationService();
+    // parse learning options as json
+    const parsedLearningOptions = JSON.parse(learningOptions!);
 
-    // const res = await conversationService.createConversation(
-    //   'user_2we4OvPDMsLXFkYjL1zv1lQOFgu',
-    //   body.message,
-    //   DEFAULT_MODEL_ID
-    // );
+    const conversationService = new ConversationService();
 
-    return NextResponse.json(learningOptions);
+    // create converation with userMessage and learningOptions
+    const userMessage = {
+      parts: JSON.stringify([{ text: parsedBody.message }]),
+      isUser: true,
+    };
+    const learningOptionsMessage = {
+      parts: JSON.stringify([{ text: parsedLearningOptions }]),
+      isUser: false,
+    };
+
+    const res = await conversationService.createConversation({
+      user: {
+        connect: {
+          id: 'user_2we4OvPDMsLXFkYjL1zv1lQOFgu',
+        },
+      },
+      aiModel: {
+        connect: {
+          id: DEFAULT_MODEL_ID,
+        },
+      },
+      messages: {
+        create: [userMessage, learningOptionsMessage],
+      },
+    });
+
+    return NextResponse.json(res);
   }
 );

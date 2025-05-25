@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import {
   SignedIn,
   SignedOut,
@@ -7,6 +8,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import Link from 'next/link';
+import { ThemeToggle } from './themeToggle';
 
 export default function Nav() {
   return (
@@ -18,6 +20,7 @@ export default function Nav() {
 
         <div className="flex items-center gap-4">
           <Link href="/dashboard">Dashboard</Link>
+          <ThemeToggle />
           <div className="flex items-center">
             <SignedOut>
               <SignInButton />

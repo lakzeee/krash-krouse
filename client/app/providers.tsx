@@ -2,8 +2,8 @@
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { motion } from 'motion/react';
+import { ThemeProvider } from 'next-themes';
 import { useDrawerStore } from '@/store/drawerStore';
-
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const { isDrawerOpen } = useDrawerStore();
@@ -29,19 +29,26 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ClerkProvider>
-      <motion.div
-        className="content-wrapper"
-        animate={isDrawerOpen ? 'open' : 'closed'}
-        variants={contentVariants}
-        transition={contentTransition}
-        style={{
-          originX: 0.5,
-          originY: 0.5,
-          overflow: 'hidden',
-        }}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        {children}
-      </motion.div>
+        <motion.div
+          className="content-wrapper"
+          animate={isDrawerOpen ? 'open' : 'closed'}
+          variants={contentVariants}
+          transition={contentTransition}
+          style={{
+            originX: 0.5,
+            originY: 0.5,
+            overflow: 'hidden',
+          }}
+        >
+          {children}
+        </motion.div>
+      </ThemeProvider>
     </ClerkProvider>
   );
 }

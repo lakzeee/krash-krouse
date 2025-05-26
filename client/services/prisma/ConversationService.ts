@@ -1,5 +1,5 @@
 import { Conversation, Prisma } from '@prisma/client';
-import { NotFoundError } from '@/lib/errors/prisma';
+import { ForbiddenError, NotFoundError } from '@/lib/errors/prisma';
 import { prisma } from '@/lib/prisma';
 
 export class ConversationService {
@@ -29,6 +29,7 @@ export class ConversationService {
     console.log(
       `Fetching conversation ${conversationId} via ConversationService`
     );
+
     return prisma.conversation.findUnique({
       where: { id: conversationId },
     });
@@ -84,6 +85,32 @@ export class ConversationService {
     return prisma.conversation.update({
       where: { id: conversationId },
       data: data,
+    });
+  }
+
+  async deleteConversation(
+    userId: string,
+    conversationId: string
+  ): Promise<Conversation> {
+    const existing = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userId: true },
+    });
+
+    if (!existing) {
+      throw new NotFoundError(
+        `Conversation with ID ${conversationId} not found.`
+      );
+    }
+
+    if (existing.userId !== userId) {
+      throw new ForbiddenError(
+        `User ${userId} is not the owner of this conversation.`
+      );
+    }
+
+    return prisma.conversation.delete({
+      where: { id: conversationId },
     });
   }
 }

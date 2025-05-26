@@ -11,8 +11,8 @@ const isProd = process.env.NODE_ENV === 'production';
 const isDevRoute = createRouteMatcher(['/api-docs']);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isDevRoute(req) && !isProd) return;
-  if (!isPublicRoute(req)) await auth.protect();
+  // if (isDevRoute(req) && !isProd) return;
+  // if (!isPublicRoute(req)) await auth.protect();
 });
 export const config = {
   matcher: [

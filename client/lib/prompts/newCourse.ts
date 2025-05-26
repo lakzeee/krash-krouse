@@ -1,4 +1,4 @@
-export const DEFAULT_MODEL_ID = 'd8dc04a6-80fc-4151-b406-cc1e62b430e2';
+export const DEFAULT_MODEL_ID = '84402783-c66f-4b31-8223-e20adf92551d';
 
 export function getValidateAndSuggestGoalsPrompt(input: string): string {
   return `

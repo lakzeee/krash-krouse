@@ -17,6 +17,35 @@ export const getApiDocs = async () => {
             bearerFormat: 'JWT',
           },
         },
+        schemas: {
+          DataResponse: {
+            type: 'object',
+            properties: {
+              data: {
+                type: 'object',
+              },
+            },
+          },
+          MessageResponse: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+              },
+            },
+          },
+          Error: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+              },
+              details: {
+                type: 'object',
+              },
+            },
+          },
+        },
       },
       security: [],
     },

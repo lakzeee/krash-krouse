@@ -1,18 +1,25 @@
+import { auth } from '@clerk/nextjs/dist/types/server';
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime/library';
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
+import { ForbiddenError, NotFoundError } from '../errors/prisma';
 
 export function withRouteErrorHandling(handler: any): any {
   return async (req: NextRequest | Request, context: any) => {
     try {
       return await handler(req, context);
     } catch (error: unknown) {
+      console.error('withRouteErrorHandling-error');
+      console.error(error);
       if (error instanceof ZodError) {
         return NextResponse.json(
-          { message: 'Validation failed', errors: error.flatten().fieldErrors },
+          {
+            message: 'Validation failed',
+            details: error,
+          },
           { status: 400 }
         );
       }
@@ -22,6 +29,7 @@ export function withRouteErrorHandling(handler: any): any {
             return NextResponse.json(
               {
                 message: `Input value too long for field ${error.meta?.target}`,
+                details: error,
               },
               { status: 400 }
             );
@@ -29,6 +37,7 @@ export function withRouteErrorHandling(handler: any): any {
             return NextResponse.json(
               {
                 message: `Unique constraint violation on ${Array.isArray(error.meta?.target) ? error.meta?.target.join(', ') : error.meta?.target}. This resource already exists.`,
+                details: error,
               },
               { status: 409 }
             );
@@ -36,6 +45,7 @@ export function withRouteErrorHandling(handler: any): any {
             return NextResponse.json(
               {
                 message: `Foreign key constraint failed on field ${error.meta?.field_name}. The related record does not exist.`,
+                details: error,
               },
               { status: 400 }
             );
@@ -43,6 +53,7 @@ export function withRouteErrorHandling(handler: any): any {
             return NextResponse.json(
               {
                 message: `The change you are trying to make would violate the required relation '${error.meta?.relation_name}' between the '${error.meta?.model_a_name}' and '${error.meta?.model_b_name}' models.`,
+                details: error,
               },
               { status: 400 }
             );
@@ -51,33 +62,61 @@ export function withRouteErrorHandling(handler: any): any {
               {
                 message:
                   error.meta?.cause || 'The requested resource was not found.',
+                details: error,
               },
               { status: 404 }
             );
           default:
             return NextResponse.json(
               {
-                message: 'A database error occurred.',
+                message: 'A database unknown error occurred.',
                 prismaErrorCode: error.code,
+                details: error,
               },
               { status: 500 }
             );
         }
       }
+
       if (error instanceof PrismaClientValidationError) {
         return NextResponse.json(
           {
             message: 'Database input validation failed.',
-            details: error.message.split('\n'),
+            details: error,
           },
           { status: 400 }
         );
       }
-      let errorMessage = 'An unexpected error occurred.';
-      if (error instanceof Error) {
-        errorMessage = error.message;
+
+      if (error instanceof NotFoundError) {
+        return NextResponse.json(
+          { message: `The requested resource was not found.`, details: error },
+          { status: 404 }
+        );
       }
-      return NextResponse.json({ message: errorMessage }, { status: 500 });
+
+      if (error instanceof ForbiddenError) {
+        return NextResponse.json(
+          {
+            message: `You are not authorized to access this resource.`,
+            details: error,
+          },
+          { status: 403 }
+        );
+      }
+
+      return NextResponse.json(
+        { message: 'An unexpected error occurred.', details: error },
+        { status: 500 }
+      );
     }
   };
+}
+
+export async function getUserIdFromAuth(): Promise<string> {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new ForbiddenError('User not found');
+  }
+  return userId;
 }

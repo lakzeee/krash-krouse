@@ -38,12 +38,13 @@ export class CourseService {
    * @returns A promise resolving to the Course object or null if not found.
    */
   async findCourseById(
+    userId: string,
     courseId: string,
     select?: Prisma.CourseSelect
   ): Promise<Course | null> {
     console.log(`Fetching course ${courseId} via CourseService`);
     return prisma.course.findUnique({
-      where: { id: courseId },
+      where: { id: courseId, creatorId: userId },
       select: select || {
         id: true,
         creatorId: true,
@@ -93,30 +94,16 @@ export class CourseService {
     courseId: string,
     input: Prisma.CourseUpdateInput
   ): Promise<Course> {
-    console.log(
-      `Updating course ${courseId} for user ${userId} via CourseService`
-    );
-    const course = await prisma.course.findUnique({
-      where: { id: courseId },
-      select: { creatorId: true },
-    });
+    const existingCourse = await this.findCourseById(userId, courseId);
 
-    if (!course) {
+    if (!existingCourse) {
       throw new NotFoundError('Course not found');
-    }
-
-    if (course.creatorId !== userId) {
-      throw new ForbiddenError(
-        'You do not have permission to update this course'
-      );
     }
 
     return prisma.course.update({
       where: { id: courseId },
       data: {
-        ...(input.topic && { topic: input.topic }),
-        ...(input.goal && { goal: input.goal }),
-        ...(input.title && { title: input.title }),
+        ...input,
       },
     });
   }
@@ -129,54 +116,15 @@ export class CourseService {
    * @throws NotFoundError if the course doesn't exist.
    * @throws ForbiddenError if the user doesn't own the course.
    */
-  async deleteCourse(userId: string, courseId: string): Promise<boolean> {
-    console.log(
-      `Deleting course ${courseId} for user ${userId} via CourseService`
-    );
-    const course = await prisma.course.findUnique({
-      where: { id: courseId },
-      select: { creatorId: true },
-    });
+  async deleteCourse(userId: string, courseId: string): Promise<Course> {
+    const existingCourse = await this.findCourseById(userId, courseId);
 
-    if (!course) {
+    if (!existingCourse) {
       throw new NotFoundError('Course not found');
     }
 
-    if (course.creatorId !== userId) {
-      throw new ForbiddenError(
-        'You do not have permission to delete this course'
-      );
-    }
-
-    await prisma.course.delete({
+    return prisma.course.delete({
       where: { id: courseId },
-    });
-
-    return true;
-  }
-
-  async findCourseByConversationId(
-    conversationId: string
-  ): Promise<Course | null> {
-    console.log(
-      `Fetching course by conversation ${conversationId} via CourseService`
-    );
-    return prisma.course.findUnique({
-      select: {
-        id: true,
-        creatorId: true,
-        conversationId: true,
-        topic: true,
-        goal: true,
-        title: true,
-        createdAt: true,
-        updatedAt: true,
-        isPublic: true,
-        creator: true,
-        conversation: true,
-        chapters: true,
-      },
-      where: { conversationId: conversationId },
     });
   }
 }

@@ -1,9 +1,9 @@
-import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { getLearningOptions } from '@/services/ai/google';
 import { ConversationService } from '@/services/prisma/ConversationService';
-import { ForbiddenError, NotFoundError } from '@/lib/errors/prisma';
-import { getUserIdFromAuth, withRouteErrorHandling } from '@/lib/helpers/api';
+import { NotFoundError } from '@/lib/errors/prisma';
+import { withRouteErrorHandling } from '@/lib/helpers/api';
+import { getUserIdFromAuth } from '@/lib/helpers/auth';
 import {
   DEFAULT_MODEL_ID,
   getValidateAndSuggestGoalsPrompt,
@@ -78,6 +78,7 @@ export const GET = withRouteErrorHandling(
     // look for the conversation in the database
 
     const conversation = await conversationService.findConversationById(
+      userId,
       parsedConversationId[0]
     );
 

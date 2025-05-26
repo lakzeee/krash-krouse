@@ -7,5 +7,3 @@ export type NewCourseRequestBody = {
 export const NewCourseRequestBodySchema = z.object({
   message: z.string(),
 });
-
-export interface UpdateConversationRequestBody {}

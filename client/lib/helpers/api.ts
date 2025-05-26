@@ -1,4 +1,3 @@
-import { auth } from '@clerk/nextjs/dist/types/server';
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
@@ -111,12 +110,4 @@ export function withRouteErrorHandling(handler: any): any {
       );
     }
   };
-}
-
-export async function getUserIdFromAuth(): Promise<string> {
-  const { userId } = await auth();
-  if (!userId) {
-    throw new ForbiddenError('User not found');
-  }
-  return userId;
 }

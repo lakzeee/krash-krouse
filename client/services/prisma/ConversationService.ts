@@ -1,5 +1,5 @@
 import { Conversation, Prisma } from '@prisma/client';
-import { ForbiddenError, NotFoundError } from '@/lib/errors/prisma';
+import { NotFoundError } from '@/lib/errors/prisma';
 import { prisma } from '@/lib/prisma';
 
 export class ConversationService {
@@ -24,6 +24,7 @@ export class ConversationService {
    * @returns A promise resolving to the Conversation object or null if not found.
    */
   async findConversationById(
+    userId: string,
     conversationId: string
   ): Promise<Conversation | null> {
     console.log(
@@ -31,7 +32,7 @@ export class ConversationService {
     );
 
     return prisma.conversation.findUnique({
-      where: { id: conversationId },
+      where: { id: conversationId, userId: userId },
     });
   }
 
@@ -66,16 +67,16 @@ export class ConversationService {
    * @throws NotFoundError if the conversation doesn't exist.
    */
   async updateConversation(
+    userId: string,
     conversationId: string,
     data: { courseId?: string; aiModelId?: string; systemPrompt?: string }
   ): Promise<Conversation> {
     console.log(
       `Updating conversation ${conversationId} via ConversationService`
     );
-    const existing = await prisma.conversation.findUnique({
-      where: { id: conversationId },
-      select: { id: true },
-    });
+
+    const existing = await this.findConversationById(userId, conversationId);
+
     if (!existing) {
       throw new NotFoundError(
         `Conversation with ID ${conversationId} not found.`
@@ -92,20 +93,11 @@ export class ConversationService {
     userId: string,
     conversationId: string
   ): Promise<Conversation> {
-    const existing = await prisma.conversation.findUnique({
-      where: { id: conversationId },
-      select: { userId: true },
-    });
+    const existing = await this.findConversationById(userId, conversationId);
 
     if (!existing) {
       throw new NotFoundError(
         `Conversation with ID ${conversationId} not found.`
-      );
-    }
-
-    if (existing.userId !== userId) {
-      throw new ForbiddenError(
-        `User ${userId} is not the owner of this conversation.`
       );
     }
 

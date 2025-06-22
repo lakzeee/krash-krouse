@@ -55,6 +55,7 @@
     "@repo/config-eslint": "workspace:*",
     "@repo/config-prettier": "workspace:*",
     "@repo/config-vitest": "workspace:*",
+    "@repo/config-typescript": "workspace:*",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@prisma/extension-optimize": "^1.1.8",

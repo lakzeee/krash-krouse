@@ -1,5 +1,6 @@
 import { LLMProvider } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { LLModelService } from '@/services/prisma';
 // Assuming these can be reused or adapted
 import { NotFoundError } from '@/lib/errors/prisma';
 import { withRouteErrorHandling } from '@/lib/helpers/api';
@@ -7,13 +8,6 @@ import {
   OptionalRouteSegmenetSchema,
   RequiredRouteSegmenetSchema,
 } from '@/lib/zod';
-import {
-  createLLModel,
-  deleteLLModel,
-  getAllLLModels,
-  getLLModelById,
-  updateLLModel,
-} from '@/prisma/services/LlmService';
 
 /**
  * @swagger
@@ -71,18 +65,21 @@ export const GET = withRouteErrorHandling(
     request: NextRequest,
     { params }: { params: { llmModelId?: string[] } }
   ) => {
+    const llmModelService = new LLModelService();
     const parsedLlmModelId = OptionalRouteSegmenetSchema.parse(
       params.llmModelId
     );
 
     if (parsedLlmModelId && parsedLlmModelId.length > 0) {
-      const llmModel = await getLLModelById(parsedLlmModelId[0]);
+      const llmModel = await llmModelService.getLLModelById(
+        parsedLlmModelId[0]
+      );
       if (!llmModel) {
         throw new NotFoundError('LLM Model not found');
       }
       return NextResponse.json(llmModel);
     } else {
-      const llmModels = await getAllLLModels();
+      const llmModels = await llmModelService.getAllLLModels();
       return NextResponse.json(llmModels);
     }
   }
@@ -147,7 +144,8 @@ export const POST = withRouteErrorHandling(async (request: NextRequest) => {
     );
   }
 
-  const newLLModel = await createLLModel({
+  const llmModelService = new LLModelService();
+  const newLLModel = await llmModelService.createLLModel({
     provider: provider as LLMProvider,
     modelName,
     displayName,
@@ -226,7 +224,8 @@ export const PUT = withRouteErrorHandling(
       );
     }
 
-    const updatedLLModel = await updateLLModel(id, {
+    const llmModelService = new LLModelService();
+    const updatedLLModel = await llmModelService.updateLLModel(id, {
       provider: provider as LLMProvider,
       modelName,
       displayName,
@@ -271,7 +270,8 @@ export const DELETE = withRouteErrorHandling(
     );
     const id = parsedLlmModelId[0];
 
-    const deletedLLModel = await deleteLLModel(id);
+    const llmModelService = new LLModelService();
+    const deletedLLModel = await llmModelService.deleteLLModel(id);
 
     if (!deletedLLModel) {
       throw new NotFoundError('LLM Model not found for deletion');

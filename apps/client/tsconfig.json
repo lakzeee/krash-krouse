@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -30,6 +26,7 @@
       "@/services": ["./services/*"],
       "@/store": ["./store/*"],
       "@/prisma": ["./prisma/*"],
+      "@/types": ["./types/*"]
     },
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -42,7 +39,5 @@
     ".next/types/**/*.ts",
     "prettier.config.mjs"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

@@ -6,7 +6,7 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {},
-    "test": {},
+    "test:unit": {},
     "check-types": {
       "dependsOn": ["^check-types"]
     },

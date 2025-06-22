@@ -10,7 +10,8 @@
     "test": "turbo test"
   },
   "workspaces": [
-    "client"
+    "apps/*",
+    "packages/*"
   ],
   "devDependencies": {
     "turbo": "^2.5.4"

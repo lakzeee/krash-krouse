@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -9,8 +9,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
-import { useDrawerStore } from '@/store/drawerStore';
+} from "@/components/ui/drawer";
+import { useDrawerStore } from "@/store/drawerStore";
 
 export default function DashboardPage() {
   const { openDrawer, closeDrawer } = useDrawerStore();

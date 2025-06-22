@@ -1,13 +1,13 @@
-import { LLMProvider } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
-import { LLModelService } from '@/services/prisma';
+import { LLMProvider } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { LLModelService } from "@/services/prisma";
 // Assuming these can be reused or adapted
-import { NotFoundError } from '@/lib/errors/prisma';
-import { withRouteErrorHandling } from '@/lib/helpers/api';
+import { NotFoundError } from "@/lib/errors/prisma";
+import { withRouteErrorHandling } from "@/lib/helpers/api";
 import {
   OptionalRouteSegmenetSchema,
   RequiredRouteSegmenetSchema,
-} from '@/lib/zod';
+} from "@/lib/zod";
 
 /**
  * @swagger
@@ -75,7 +75,7 @@ export const GET = withRouteErrorHandling(
         parsedLlmModelId[0]
       );
       if (!llmModel) {
-        throw new NotFoundError('LLM Model not found');
+        throw new NotFoundError("LLM Model not found");
       }
       return NextResponse.json(llmModel);
     } else {
@@ -132,14 +132,14 @@ export const POST = withRouteErrorHandling(async (request: NextRequest) => {
 
   if (!provider || !modelName) {
     return NextResponse.json(
-      { error: 'Provider and modelName are required' },
+      { error: "Provider and modelName are required" },
       { status: 400 }
     );
   }
 
   if (!Object.values(LLMProvider).includes(provider as LLMProvider)) {
     return NextResponse.json(
-      { error: 'Invalid LLMProvider value' },
+      { error: "Invalid LLMProvider value" },
       { status: 400 }
     );
   }
@@ -219,7 +219,7 @@ export const PUT = withRouteErrorHandling(
       !Object.values(LLMProvider).includes(provider as LLMProvider)
     ) {
       return NextResponse.json(
-        { error: 'Invalid LLMProvider value' },
+        { error: "Invalid LLMProvider value" },
         { status: 400 }
       );
     }
@@ -233,7 +233,7 @@ export const PUT = withRouteErrorHandling(
     });
 
     if (!updatedLLModel) {
-      throw new NotFoundError('LLM Model not found for update');
+      throw new NotFoundError("LLM Model not found for update");
     }
     return NextResponse.json(updatedLLModel);
   }
@@ -274,8 +274,8 @@ export const DELETE = withRouteErrorHandling(
     const deletedLLModel = await llmModelService.deleteLLModel(id);
 
     if (!deletedLLModel) {
-      throw new NotFoundError('LLM Model not found for deletion');
+      throw new NotFoundError("LLM Model not found for deletion");
     }
-    return NextResponse.json({ message: 'LLM Model deleted successfully' });
+    return NextResponse.json({ message: "LLM Model deleted successfully" });
   }
 );

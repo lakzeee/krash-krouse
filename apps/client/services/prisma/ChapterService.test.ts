@@ -1,10 +1,10 @@
-import { Chapter, ChapterStatus, Prisma } from '@prisma/client';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { prisma } from '@/lib/prisma';
-import { ChapterService } from './ChapterService';
+import { Chapter, ChapterStatus, Prisma } from "@prisma/client";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { prisma } from "@/lib/prisma";
+import { ChapterService } from "./ChapterService";
 
 // Mock Prisma
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     chapter: {
       findMany: vi.fn(),
@@ -12,7 +12,7 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
-describe('ChapterService', () => {
+describe("ChapterService", () => {
   let chapterService: ChapterService;
 
   beforeEach(() => {
@@ -20,31 +20,31 @@ describe('ChapterService', () => {
     vi.clearAllMocks(); // Clear mocks before each test
   });
 
-  describe('findChaptersByCourseId', () => {
+  describe("findChaptersByCourseId", () => {
     it('should return chapters for a given course ID, ordered by "order"', async () => {
-      const courseId = 'test-course-id';
+      const courseId = "test-course-id";
       const mockChapters: Chapter[] = [
         {
-          id: 'chap1',
+          id: "chap1",
           courseId,
-          title: 'Chapter 1',
-          content: { text: 'Content 1' } as Prisma.JsonValue,
+          title: "Chapter 1",
+          content: { text: "Content 1" } as Prisma.JsonValue,
           order: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
           status: ChapterStatus.NOT_STARTED,
-          objectives: ['Objective 1'],
+          objectives: ["Objective 1"],
         },
         {
-          id: 'chap2',
+          id: "chap2",
           courseId,
-          title: 'Chapter 2',
-          content: { text: 'Content 2' } as Prisma.JsonValue,
+          title: "Chapter 2",
+          content: { text: "Content 2" } as Prisma.JsonValue,
           order: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
           status: ChapterStatus.IN_PROGRESS,
-          objectives: ['Objective 2'],
+          objectives: ["Objective 2"],
         },
       ];
 
@@ -58,7 +58,7 @@ describe('ChapterService', () => {
       expect(prisma.chapter.findMany).toHaveBeenCalledWith({
         where: { courseId: courseId },
         orderBy: {
-          order: 'asc',
+          order: "asc",
         },
       });
       expect(chapters).toEqual(mockChapters);
@@ -67,8 +67,8 @@ describe('ChapterService', () => {
       expect(chapters[1].order).toBe(2);
     });
 
-    it('should return an empty array if no chapters are found', async () => {
-      const courseId = 'non-existent-course-id';
+    it("should return an empty array if no chapters are found", async () => {
+      const courseId = "non-existent-course-id";
       (prisma.chapter.findMany as ReturnType<typeof vi.fn>).mockResolvedValue(
         []
       );
@@ -78,16 +78,16 @@ describe('ChapterService', () => {
       expect(prisma.chapter.findMany).toHaveBeenCalledWith({
         where: { courseId: courseId },
         orderBy: {
-          order: 'asc',
+          order: "asc",
         },
       });
       expect(chapters).toEqual([]);
       expect(chapters.length).toBe(0);
     });
 
-    it('should handle errors from prisma.chapter.findMany', async () => {
-      const courseId = 'error-course-id';
-      const errorMessage = 'Database error';
+    it("should handle errors from prisma.chapter.findMany", async () => {
+      const courseId = "error-course-id";
+      const errorMessage = "Database error";
       (prisma.chapter.findMany as ReturnType<typeof vi.fn>).mockRejectedValue(
         new Error(errorMessage)
       );
@@ -99,7 +99,7 @@ describe('ChapterService', () => {
       expect(prisma.chapter.findMany).toHaveBeenCalledWith({
         where: { courseId: courseId },
         orderBy: {
-          order: 'asc',
+          order: "asc",
         },
       });
     });

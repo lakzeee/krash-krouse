@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'API Documentation - OfCourse',
-  description: 'Interactive API documentation for the OfCourse application',
+  title: "API Documentation - OfCourse",
+  description: "Interactive API documentation for the OfCourse application",
 };
 
 export default function ApiDocsLayout({

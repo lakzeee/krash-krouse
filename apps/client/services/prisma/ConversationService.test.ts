@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { NotFoundError } from '@/lib/errors/prisma';
-import { prisma } from '@/lib/prisma';
-import { ConversationService } from './ConversationService';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NotFoundError } from "@/lib/errors/prisma";
+import { prisma } from "@/lib/prisma";
+import { ConversationService } from "./ConversationService";
 
 // Mock Prisma client
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     conversation: {
       findMany: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
-describe('ConversationService', () => {
+describe("ConversationService", () => {
   let conversationService: ConversationService;
 
   beforeEach(() => {
@@ -24,12 +24,12 @@ describe('ConversationService', () => {
     vi.clearAllMocks(); // Clear mocks before each test
   });
 
-  describe('findConversationsByUserId', () => {
-    it('should return conversations for a user', async () => {
-      const userId = 'user123';
+  describe("findConversationsByUserId", () => {
+    it("should return conversations for a user", async () => {
+      const userId = "user123";
       const mockConversations = [
-        { id: 'conv1', userId },
-        { id: 'conv2', userId },
+        { id: "conv1", userId },
+        { id: "conv2", userId },
       ];
       (prisma.conversation.findMany as any).mockResolvedValue(
         mockConversations
@@ -40,16 +40,16 @@ describe('ConversationService', () => {
 
       expect(prisma.conversation.findMany).toHaveBeenCalledWith({
         where: { userId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       });
       expect(conversations).toEqual(mockConversations);
     });
   });
 
-  describe('findConversationById', () => {
-    it('should return a conversation if found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
+  describe("findConversationById", () => {
+    it("should return a conversation if found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
       const mockConversation = { id: conversationId, userId };
       (prisma.conversation.findUnique as any).mockResolvedValue(
         mockConversation
@@ -66,9 +66,9 @@ describe('ConversationService', () => {
       expect(conversation).toEqual(mockConversation);
     });
 
-    it('should return null if conversation not found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
+    it("should return null if conversation not found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
       (prisma.conversation.findUnique as any).mockResolvedValue(null);
 
       const conversation = await conversationService.findConversationById(
@@ -83,10 +83,10 @@ describe('ConversationService', () => {
     });
   });
 
-  describe('createConversation', () => {
-    it('should create a new conversation', async () => {
-      const input = { user: { connect: { id: 'user123' } } };
-      const mockConversation = { id: 'newConv', ...input };
+  describe("createConversation", () => {
+    it("should create a new conversation", async () => {
+      const input = { user: { connect: { id: "user123" } } };
+      const mockConversation = { id: "newConv", ...input };
       (prisma.conversation.create as any).mockResolvedValue(mockConversation);
 
       const conversation = await conversationService.createConversation(
@@ -103,16 +103,16 @@ describe('ConversationService', () => {
     });
   });
 
-  describe('updateConversation', () => {
-    it('should update a conversation if found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
-      const updateData = { courseId: 'course456' };
+  describe("updateConversation", () => {
+    it("should update a conversation if found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
+      const updateData = { courseId: "course456" };
       const existingConversation = { id: conversationId, userId };
       const updatedConversation = { ...existingConversation, ...updateData };
 
       // Mock findConversationById
-      vi.spyOn(conversationService, 'findConversationById').mockResolvedValue(
+      vi.spyOn(conversationService, "findConversationById").mockResolvedValue(
         existingConversation as any
       );
       (prisma.conversation.update as any).mockResolvedValue(
@@ -136,12 +136,12 @@ describe('ConversationService', () => {
       expect(conversation).toEqual(updatedConversation);
     });
 
-    it('should throw NotFoundError if conversation to update is not found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
-      const updateData = { courseId: 'course456' };
+    it("should throw NotFoundError if conversation to update is not found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
+      const updateData = { courseId: "course456" };
 
-      vi.spyOn(conversationService, 'findConversationById').mockResolvedValue(
+      vi.spyOn(conversationService, "findConversationById").mockResolvedValue(
         null
       );
 
@@ -160,14 +160,14 @@ describe('ConversationService', () => {
     });
   });
 
-  describe('deleteConversation', () => {
-    it('should delete a conversation if found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
+  describe("deleteConversation", () => {
+    it("should delete a conversation if found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
       const existingConversation = { id: conversationId, userId };
 
       // Mock findConversationById
-      vi.spyOn(conversationService, 'findConversationById').mockResolvedValue(
+      vi.spyOn(conversationService, "findConversationById").mockResolvedValue(
         existingConversation as any
       );
       (prisma.conversation.delete as any).mockResolvedValue(
@@ -189,11 +189,11 @@ describe('ConversationService', () => {
       expect(conversation).toEqual(existingConversation);
     });
 
-    it('should throw NotFoundError if conversation to delete is not found', async () => {
-      const userId = 'user123';
-      const conversationId = 'conv123';
+    it("should throw NotFoundError if conversation to delete is not found", async () => {
+      const userId = "user123";
+      const conversationId = "conv123";
 
-      vi.spyOn(conversationService, 'findConversationById').mockResolvedValue(
+      vi.spyOn(conversationService, "findConversationById").mockResolvedValue(
         null
       );
 

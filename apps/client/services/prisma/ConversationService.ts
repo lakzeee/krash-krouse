@@ -1,6 +1,6 @@
-import { Conversation, Prisma } from '@prisma/client';
-import { NotFoundError } from '@/lib/errors/prisma';
-import { prisma } from '@/lib/prisma';
+import { Conversation, Prisma } from "@prisma/client";
+import { NotFoundError } from "@/lib/errors/prisma";
+import { prisma } from "@/lib/prisma";
 
 export class ConversationService {
   /**
@@ -14,7 +14,7 @@ export class ConversationService {
     );
     return prisma.conversation.findMany({
       where: { userId: userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
   }
 

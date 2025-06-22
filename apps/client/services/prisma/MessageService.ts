@@ -1,6 +1,6 @@
-import { Part } from '@google/genai';
-import { Message } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { Part } from "@google/genai";
+import { Message } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export class MessageService {
   /**
@@ -17,7 +17,7 @@ export class MessageService {
     return prisma.message.findMany({
       where: { conversationId: conversationId },
       orderBy: {
-        timestamp: 'asc', // Order messages chronologically
+        timestamp: "asc", // Order messages chronologically
       },
     });
   }

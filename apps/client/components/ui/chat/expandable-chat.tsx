@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import { X, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export type ChatPosition = "bottom-right" | "bottom-left";
 export type ChatSize = "sm" | "md" | "lg" | "xl" | "full";
@@ -62,7 +62,7 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
           chatConfig.chatPositions[position],
           chatConfig.dimensions[size],
           isOpen ? chatConfig.states.open : chatConfig.states.closed,
-          className,
+          className
         )}
       >
         {children}
@@ -131,7 +131,7 @@ const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
     onClick={toggleChat}
     className={cn(
       "w-14 h-14 rounded-full shadow-md flex items-center justify-center hover:shadow-lg hover:shadow-black/30 transition-all duration-300",
-      className,
+      className
     )}
     {...props}
   >

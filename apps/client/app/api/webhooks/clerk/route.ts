@@ -1,23 +1,23 @@
-import { WebhookEvent } from '@clerk/nextjs/server';
-import { headers } from 'next/headers';
-import { Webhook } from 'svix';
-import { prisma } from '@/lib/prisma';
+import { WebhookEvent } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
+import { Webhook } from "svix";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const secret = process.env.SIGNING_SECRET;
-  if (!secret) return new Response('Missing secret', { status: 500 });
+  if (!secret) return new Response("Missing secret", { status: 500 });
 
   const wh = new Webhook(secret);
   const body = await req.text();
   const headerPayload = await headers();
 
   const event = wh.verify(body, {
-    'svix-id': headerPayload.get('svix-id')!,
-    'svix-timestamp': headerPayload.get('svix-timestamp')!,
-    'svix-signature': headerPayload.get('svix-signature')!,
+    "svix-id": headerPayload.get("svix-id")!,
+    "svix-timestamp": headerPayload.get("svix-timestamp")!,
+    "svix-signature": headerPayload.get("svix-signature")!,
   }) as WebhookEvent;
 
-  if (event.type === 'user.created') {
+  if (event.type === "user.created") {
     const {
       id,
       email_addresses,
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     const email = email_addresses?.[0]?.email_address;
     if (!email) {
-      return new Response('Missing primary email address', { status: 400 });
+      return new Response("Missing primary email address", { status: 400 });
     }
 
     await prisma.user.upsert({
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         updatedAt: updated_at ? new Date(updated_at) : new Date(),
       },
     });
-  } else if (event.type === 'user.updated') {
+  } else if (event.type === "user.updated") {
     const {
       id,
       email_addresses,
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
         `Skipping user.updated for user ${id}: User not found in database.`
       );
       // Acknowledge webhook, but indicate user wasn't found locally
-      return new Response('OK - User not found', { status: 200 });
+      return new Response("OK - User not found", { status: 200 });
     }
 
     const email = email_addresses?.[0]?.email_address;
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         updatedAt: updated_at ? new Date(updated_at) : new Date(),
       },
     });
-  } else if (event.type === 'user.deleted') {
+  } else if (event.type === "user.deleted") {
     const { id } = event.data;
 
     // Check if user exists before deleting
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       console.warn(
         `Skipping user.deleted for user ${id}: User not found in database.`
       );
-      return new Response('OK - User not found', { status: 200 });
+      return new Response("OK - User not found", { status: 200 });
     }
 
     await prisma.user.deleteMany({
@@ -108,5 +108,5 @@ export async function POST(req: Request) {
     });
   }
 
-  return new Response('OK');
+  return new Response("OK");
 }

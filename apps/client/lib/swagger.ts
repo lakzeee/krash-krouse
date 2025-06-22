@@ -1,47 +1,47 @@
-import { createSwaggerSpec } from 'next-swagger-doc';
+import { createSwaggerSpec } from "next-swagger-doc";
 
 export const getApiDocs = async () => {
   const spec = createSwaggerSpec({
-    apiFolder: 'app/api',
+    apiFolder: "app/api",
     definition: {
-      openapi: '3.0.0',
+      openapi: "3.0.0",
       info: {
-        title: 'krush kourse api',
-        version: '1.0',
+        title: "krush kourse api",
+        version: "1.0",
       },
       components: {
         securitySchemes: {
           BearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
           },
         },
         schemas: {
           DataResponse: {
-            type: 'object',
+            type: "object",
             properties: {
               data: {
-                type: 'object',
+                type: "object",
               },
             },
           },
           MessageResponse: {
-            type: 'object',
+            type: "object",
             properties: {
               message: {
-                type: 'string',
+                type: "string",
               },
             },
           },
           Error: {
-            type: 'object',
+            type: "object",
             properties: {
               message: {
-                type: 'string',
+                type: "string",
               },
               details: {
-                type: 'object',
+                type: "object",
               },
             },
           },

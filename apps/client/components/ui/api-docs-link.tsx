@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-export function ApiDocsLink({ className = '' }: { className?: string }) {
+export function ApiDocsLink({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/api-docs"
@@ -25,7 +25,7 @@ export function ApiDocsLink({ className = '' }: { className?: string }) {
   );
 }
 
-export function ApiDocsButton({ className = '' }: { className?: string }) {
+export function ApiDocsButton({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/api-docs"

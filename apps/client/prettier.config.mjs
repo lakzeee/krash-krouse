@@ -1,18 +1,3 @@
-const config = {
-  trailingComma: 'es5',
-  tabWidth: 2,
-  semi: true,
-  singleQuote: true,
-  plugins: ['prettier-plugin-tailwindcss', '@trivago/prettier-plugin-sort-imports'],
-  importOrder: [
-    '<THIRD_PARTY_MODULES>',
-    '^@/utils/(.*)$',
-    '^@/services/(.*)$',
-    '^@/graphql/(.*)$',
-    '^@/components/(.*)$',
-    '^@/(.*)$',
-    '^[./]',
-  ],
-};
+import config from "@repo/config-prettier/next";
 
 export default config;

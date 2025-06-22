@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { NotFoundError, ForbiddenError } from '@/lib/errors/prisma';
-import { prisma } from '@/lib/prisma';
-import { CourseService } from './CourseService';
+import { Prisma } from "@prisma/client";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NotFoundError, ForbiddenError } from "@/lib/errors/prisma";
+import { prisma } from "@/lib/prisma";
+import { CourseService } from "./CourseService";
 
 // Mock Prisma client
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     course: {
       findMany: vi.fn(),
@@ -29,33 +29,33 @@ const defaultCourseSelect = {
   isPublic: true,
 };
 
-describe('CourseService', () => {
+describe("CourseService", () => {
   let courseService: CourseService;
-  const userId = 'user123'; // Define userId for reuse
+  const userId = "user123"; // Define userId for reuse
 
   beforeEach(() => {
     courseService = new CourseService();
     vi.clearAllMocks(); // Clear mocks before each test
   });
 
-  describe('findCoursesByUserId', () => {
-    it('should return courses for a user with default select', async () => {
-      const mockCourses = [{ id: 'course1', creatorId: userId }];
+  describe("findCoursesByUserId", () => {
+    it("should return courses for a user with default select", async () => {
+      const mockCourses = [{ id: "course1", creatorId: userId }];
       (prisma.course.findMany as any).mockResolvedValue(mockCourses);
 
       const courses = await courseService.findCoursesByUserId(userId);
 
       expect(prisma.course.findMany).toHaveBeenCalledWith({
         where: { creatorId: userId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: defaultCourseSelect,
       });
       expect(courses).toEqual(mockCourses);
     });
 
-    it('should return courses for a user with custom select', async () => {
+    it("should return courses for a user with custom select", async () => {
       const mockCourses = [
-        { id: 'course1', creatorId: userId, title: 'Test Course' },
+        { id: "course1", creatorId: userId, title: "Test Course" },
       ];
       const select: Prisma.CourseSelect = {
         id: true,
@@ -68,16 +68,16 @@ describe('CourseService', () => {
 
       expect(prisma.course.findMany).toHaveBeenCalledWith({
         where: { creatorId: userId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select,
       });
       expect(courses).toEqual(mockCourses);
     });
   });
 
-  describe('findCourseById', () => {
-    const courseId = 'course123';
-    it('should return a course if found with default select', async () => {
+  describe("findCourseById", () => {
+    const courseId = "course123";
+    it("should return a course if found with default select", async () => {
       const mockCourse = { id: courseId, creatorId: userId };
       (prisma.course.findUnique as any).mockResolvedValue(mockCourse);
 
@@ -90,11 +90,11 @@ describe('CourseService', () => {
       expect(course).toEqual(mockCourse);
     });
 
-    it('should return a course if found with custom select', async () => {
+    it("should return a course if found with custom select", async () => {
       const mockCourse = {
         id: courseId,
         creatorId: userId,
-        title: 'Test Course',
+        title: "Test Course",
       };
       const select: Prisma.CourseSelect = {
         id: true,
@@ -116,7 +116,7 @@ describe('CourseService', () => {
       expect(course).toEqual(mockCourse);
     });
 
-    it('should return null if course not found', async () => {
+    it("should return null if course not found", async () => {
       (prisma.course.findUnique as any).mockResolvedValue(null);
 
       const course = await courseService.findCourseById(userId, courseId);
@@ -129,16 +129,16 @@ describe('CourseService', () => {
     });
   });
 
-  describe('createCourse', () => {
-    it('should create a new course', async () => {
+  describe("createCourse", () => {
+    it("should create a new course", async () => {
       const input: Prisma.CourseCreateInput = {
-        topic: 'Test Topic',
-        goal: 'Test Goal',
-        title: 'Test Title',
+        topic: "Test Topic",
+        goal: "Test Goal",
+        title: "Test Title",
         creator: { connect: { id: userId } }, // creatorId will be set by the service method
       };
       const mockCourse = {
-        id: 'newCourse',
+        id: "newCourse",
         creatorId: userId,
         topic: input.topic,
         goal: input.goal,
@@ -161,16 +161,16 @@ describe('CourseService', () => {
     });
   });
 
-  describe('updateCourse', () => {
-    const courseId = 'course123';
-    const input: Prisma.CourseUpdateInput = { title: 'Updated Title' };
+  describe("updateCourse", () => {
+    const courseId = "course123";
+    const input: Prisma.CourseUpdateInput = { title: "Updated Title" };
 
-    it('should update a course if found and user is owner', async () => {
+    it("should update a course if found and user is owner", async () => {
       const existingCourse = { id: courseId, creatorId: userId };
       const updatedCourse = { ...existingCourse, ...input };
 
       // Mock findCourseById which is called internally by updateCourse
-      vi.spyOn(courseService, 'findCourseById').mockResolvedValue(
+      vi.spyOn(courseService, "findCourseById").mockResolvedValue(
         existingCourse as any
       );
       (prisma.course.update as any).mockResolvedValue(updatedCourse);
@@ -188,8 +188,8 @@ describe('CourseService', () => {
       expect(course).toEqual(updatedCourse);
     });
 
-    it('should throw NotFoundError if course to update is not found', async () => {
-      vi.spyOn(courseService, 'findCourseById').mockResolvedValue(null);
+    it("should throw NotFoundError if course to update is not found", async () => {
+      vi.spyOn(courseService, "findCourseById").mockResolvedValue(null);
 
       await expect(
         courseService.updateCourse(userId, courseId, input)
@@ -207,13 +207,13 @@ describe('CourseService', () => {
     // but its current implementation returns null if not found or if creatorId doesn't match.
   });
 
-  describe('deleteCourse', () => {
-    const courseId = 'course123';
+  describe("deleteCourse", () => {
+    const courseId = "course123";
 
-    it('should delete a course if found and user is owner', async () => {
+    it("should delete a course if found and user is owner", async () => {
       const existingCourse = { id: courseId, creatorId: userId };
       // Mock findCourseById which is called internally by deleteCourse
-      vi.spyOn(courseService, 'findCourseById').mockResolvedValue(
+      vi.spyOn(courseService, "findCourseById").mockResolvedValue(
         existingCourse as any
       );
       (prisma.course.delete as any).mockResolvedValue(existingCourse); // Prisma delete returns the deleted object
@@ -230,8 +230,8 @@ describe('CourseService', () => {
       expect(result).toEqual(existingCourse);
     });
 
-    it('should throw NotFoundError if course to delete is not found', async () => {
-      vi.spyOn(courseService, 'findCourseById').mockResolvedValue(null);
+    it("should throw NotFoundError if course to delete is not found", async () => {
+      vi.spyOn(courseService, "findCourseById").mockResolvedValue(null);
 
       await expect(
         courseService.deleteCourse(userId, courseId)

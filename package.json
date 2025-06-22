@@ -7,14 +7,18 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
-    "test": "turbo test"
+    "test": "turbo test",
+    "format": "turbo format"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
-    "turbo": "^2.5.4"
+    "turbo": "^2.5.4",
+    "prettier": "^3.5.3",
+    "eslint": "^9",
+    "typescript": "^5"
   },
   "packageManager": "pnpm@10.0.0"
 }

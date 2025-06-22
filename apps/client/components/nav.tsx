@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   SignedIn,
@@ -6,9 +6,9 @@ import {
   SignInButton,
   SignUpButton,
   UserButton,
-} from '@clerk/nextjs';
-import Link from 'next/link';
-import { ThemeToggle } from './themeToggle';
+} from "@clerk/nextjs";
+import Link from "next/link";
+import { ThemeToggle } from "./themeToggle";
 
 export default function Nav() {
   return (

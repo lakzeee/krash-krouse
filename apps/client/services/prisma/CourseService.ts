@@ -1,6 +1,6 @@
-import { Course, Prisma } from '@prisma/client';
-import { ForbiddenError, NotFoundError } from '@/lib/errors/prisma';
-import { prisma } from '@/lib/prisma';
+import { Course, Prisma } from "@prisma/client";
+import { ForbiddenError, NotFoundError } from "@/lib/errors/prisma";
+import { prisma } from "@/lib/prisma";
 
 export class CourseService {
   /**
@@ -16,7 +16,7 @@ export class CourseService {
     console.log(`Fetching courses for user ${userId} via CourseService`);
     return prisma.course.findMany({
       where: { creatorId: userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       select: select || {
         id: true,
         creatorId: true,
@@ -97,7 +97,7 @@ export class CourseService {
     const existingCourse = await this.findCourseById(userId, courseId);
 
     if (!existingCourse) {
-      throw new NotFoundError('Course not found');
+      throw new NotFoundError("Course not found");
     }
 
     return prisma.course.update({
@@ -120,7 +120,7 @@ export class CourseService {
     const existingCourse = await this.findCourseById(userId, courseId);
 
     if (!existingCourse) {
-      throw new NotFoundError('Course not found');
+      throw new NotFoundError("Course not found");
     }
 
     return prisma.course.delete({

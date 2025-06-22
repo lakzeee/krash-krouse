@@ -1,12 +1,12 @@
-import { LLMProvider, Prisma } from '@prisma/client';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { prisma } from '@/lib/prisma';
-import { LLModelService } from './LLModelService';
+import { LLMProvider, Prisma } from "@prisma/client";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { prisma } from "@/lib/prisma";
+import { LLModelService } from "./LLModelService";
 
 // Prisma is needed for types if you use specific input/output types directly.
 
 // Mock Prisma client
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     lLModel: {
       // Ensure this matches the actual Prisma model name (e.g., llModel or lLModel)
@@ -19,7 +19,7 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
-describe('LLModelService', () => {
+describe("LLModelService", () => {
   let llModelService: LLModelService;
 
   beforeEach(() => {
@@ -27,15 +27,15 @@ describe('LLModelService', () => {
     vi.clearAllMocks(); // Clear mocks before each test
   });
 
-  describe('createLLModel', () => {
-    it('should create a new LLModel', async () => {
+  describe("createLLModel", () => {
+    it("should create a new LLModel", async () => {
       const modelData = {
         provider: LLMProvider.GOOGLE,
-        modelName: 'gemini-pro',
-        displayName: 'Gemini Pro',
+        modelName: "gemini-pro",
+        displayName: "Gemini Pro",
         contextWindow: 8192,
       };
-      const mockLLModel = { id: 'model123', ...modelData };
+      const mockLLModel = { id: "model123", ...modelData };
       (prisma.lLModel.create as any).mockResolvedValue(mockLLModel);
 
       const llModel = await llModelService.createLLModel(modelData);
@@ -45,12 +45,12 @@ describe('LLModelService', () => {
     });
   });
 
-  describe('getLLModelById', () => {
-    it('should return an LLModel if found by ID', async () => {
-      const modelId = 'model123';
+  describe("getLLModelById", () => {
+    it("should return an LLModel if found by ID", async () => {
+      const modelId = "model123";
       const mockLLModel = {
         id: modelId,
-        modelName: 'gemini-pro',
+        modelName: "gemini-pro",
         provider: LLMProvider.GOOGLE,
       };
       (prisma.lLModel.findUnique as any).mockResolvedValue(mockLLModel);
@@ -63,8 +63,8 @@ describe('LLModelService', () => {
       expect(llModel).toEqual(mockLLModel);
     });
 
-    it('should return null if LLModel not found by ID', async () => {
-      const modelId = 'nonexistent';
+    it("should return null if LLModel not found by ID", async () => {
+      const modelId = "nonexistent";
       (prisma.lLModel.findUnique as any).mockResolvedValue(null);
 
       const llModel = await llModelService.getLLModelById(modelId);
@@ -76,11 +76,11 @@ describe('LLModelService', () => {
     });
   });
 
-  describe('getLLModelByModelName', () => {
-    it('should return an LLModel if found by model name', async () => {
-      const modelName = 'gemini-pro';
+  describe("getLLModelByModelName", () => {
+    it("should return an LLModel if found by model name", async () => {
+      const modelName = "gemini-pro";
       const mockLLModel = {
-        id: 'model123',
+        id: "model123",
         modelName,
         provider: LLMProvider.GOOGLE,
       };
@@ -94,8 +94,8 @@ describe('LLModelService', () => {
       expect(llModel).toEqual(mockLLModel);
     });
 
-    it('should return null if LLModel not found by model name', async () => {
-      const modelName = 'nonexistent-model';
+    it("should return null if LLModel not found by model name", async () => {
+      const modelName = "nonexistent-model";
       (prisma.lLModel.findUnique as any).mockResolvedValue(null);
 
       const llModel = await llModelService.getLLModelByModelName(modelName);
@@ -107,13 +107,13 @@ describe('LLModelService', () => {
     });
   });
 
-  describe('getAllLLModels', () => {
-    it('should return all LLModels', async () => {
+  describe("getAllLLModels", () => {
+    it("should return all LLModels", async () => {
       const mockLLModels = [
-        { id: 'model1', modelName: 'gemini-pro', provider: LLMProvider.GOOGLE },
+        { id: "model1", modelName: "gemini-pro", provider: LLMProvider.GOOGLE },
         {
-          id: 'model2',
-          modelName: 'deepseek-coder',
+          id: "model2",
+          modelName: "deepseek-coder",
           provider: LLMProvider.DEEPSEEK,
         },
       ];
@@ -126,14 +126,14 @@ describe('LLModelService', () => {
     });
   });
 
-  describe('updateLLModel', () => {
-    const modelId = 'model123';
-    const updateData = { displayName: 'Gemini Pro v1.5' };
+  describe("updateLLModel", () => {
+    const modelId = "model123";
+    const updateData = { displayName: "Gemini Pro v1.5" };
 
-    it('should update an LLModel if found', async () => {
+    it("should update an LLModel if found", async () => {
       const existingModel = {
         id: modelId,
-        modelName: 'gemini-pro',
+        modelName: "gemini-pro",
         provider: LLMProvider.GOOGLE,
       };
       const updatedModel = { ...existingModel, ...updateData };
@@ -152,7 +152,7 @@ describe('LLModelService', () => {
       expect(llModel).toEqual(updatedModel);
     });
 
-    it('should return null if LLModel to update is not found', async () => {
+    it("should return null if LLModel to update is not found", async () => {
       (prisma.lLModel.findUnique as any).mockResolvedValue(null); // For the existence check
 
       const llModel = await llModelService.updateLLModel(modelId, updateData);
@@ -165,13 +165,13 @@ describe('LLModelService', () => {
     });
   });
 
-  describe('deleteLLModel', () => {
-    const modelId = 'model123';
+  describe("deleteLLModel", () => {
+    const modelId = "model123";
 
-    it('should delete an LLModel if found', async () => {
+    it("should delete an LLModel if found", async () => {
       const existingModel = {
         id: modelId,
-        modelName: 'gemini-pro',
+        modelName: "gemini-pro",
         provider: LLMProvider.GOOGLE,
       };
       (prisma.lLModel.findUnique as any).mockResolvedValue(existingModel); // For the existence check
@@ -188,7 +188,7 @@ describe('LLModelService', () => {
       expect(llModel).toEqual(existingModel);
     });
 
-    it('should return null if LLModel to delete is not found', async () => {
+    it("should return null if LLModel to delete is not found", async () => {
       (prisma.lLModel.findUnique as any).mockResolvedValue(null); // For the existence check
 
       const llModel = await llModelService.deleteLLModel(modelId);

@@ -1,5 +1,5 @@
-import { Chapter } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { Chapter } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export class ChapterService {
   async findChaptersByCourseId(courseId: string): Promise<Chapter[]> {
@@ -7,7 +7,7 @@ export class ChapterService {
     return prisma.chapter.findMany({
       where: { courseId: courseId },
       orderBy: {
-        order: 'asc',
+        order: "asc",
       },
     });
   }

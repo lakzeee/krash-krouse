@@ -1,4 +1,4 @@
-import { ChatBubble } from './ui/chat/chat-bubble';
+import { ChatBubble } from "./ui/chat/chat-bubble";
 
 export default function NewConversation() {
   return (

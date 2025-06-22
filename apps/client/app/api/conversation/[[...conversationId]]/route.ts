@@ -1,23 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getLearningOptions } from '@/services/ai/google';
-import { ConversationService } from '@/services/prisma/ConversationService';
-import { NotFoundError } from '@/lib/errors/prisma';
-import { withRouteErrorHandling } from '@/lib/helpers/api';
-import { getUserIdFromAuth } from '@/lib/helpers/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getLearningOptions } from "@/services/ai/google";
+import { ConversationService } from "@/services/prisma/ConversationService";
+import { NotFoundError } from "@/lib/errors/prisma";
+import { withRouteErrorHandling } from "@/lib/helpers/api";
+import { getUserIdFromAuth } from "@/lib/helpers/auth";
 import {
   DEFAULT_MODEL_ID,
   getValidateAndSuggestGoalsPrompt,
-} from '@/lib/prompts/newCourse';
+} from "@/lib/prompts/newCourse";
 import {
   OptionalRouteSegmenetSchema,
   RequiredRouteSegmenetSchema,
-} from '@/lib/zod';
+} from "@/lib/zod";
 import {
   NewCourseRequestBody,
   NewCourseRequestBodySchema,
   UpdateConversationRequestBody,
   UpdateConversationRequestBodySchema,
-} from '@/types/api';
+} from "@/types/api";
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ export const GET = withRouteErrorHandling(
     );
 
     if (!conversation) {
-      throw new NotFoundError('Conversation not found');
+      throw new NotFoundError("Conversation not found");
     }
 
     return NextResponse.json({ data: conversation });
@@ -234,13 +234,13 @@ export const PUT = withRouteErrorHandling(
     );
 
     if (!conversation) {
-      throw new NotFoundError('Conversation not found');
+      throw new NotFoundError("Conversation not found");
     }
 
     const body: UpdateConversationRequestBody = await request.json();
     const parsedBody = UpdateConversationRequestBodySchema.parse(body);
 
-    if (parsedBody.action === 'learning-objective') {
+    if (parsedBody.action === "learning-objective") {
     }
   }
 );

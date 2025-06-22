@@ -1,5 +1,5 @@
-import { LLModel, PrismaClient, LLMProvider } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { LLModel, PrismaClient, LLMProvider } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export class LLModelService {
   async createLLModel(data: {

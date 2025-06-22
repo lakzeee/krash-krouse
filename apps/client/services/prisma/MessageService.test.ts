@@ -1,10 +1,10 @@
-import type { Part } from '@google/genai';
-import type { Message } from '@prisma/client';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { prisma } from '@/lib/prisma';
-import { MessageService } from './MessageService';
+import type { Part } from "@google/genai";
+import type { Message } from "@prisma/client";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
+import { prisma } from "@/lib/prisma";
+import { MessageService } from "./MessageService";
 
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     message: {
       findMany: vi.fn(),
@@ -15,16 +15,16 @@ vi.mock('@/lib/prisma', () => ({
 
 const createMockMessage = (overrides: Partial<Message> = {}): Message => ({
   id: `msg_${Math.random().toString(36).substring(2, 15)}`,
-  conversationId: 'conv123',
+  conversationId: "conv123",
   isUser: true,
-  parts: JSON.stringify([{ text: 'Hello' }]),
+  parts: JSON.stringify([{ text: "Hello" }]),
   timestamp: new Date(),
   ...overrides,
 });
 
-const createMockParts = (text = 'Test content'): Part[] => [{ text }];
+const createMockParts = (text = "Test content"): Part[] => [{ text }];
 
-describe('MessageService', () => {
+describe("MessageService", () => {
   let messageService: MessageService;
 
   beforeEach(() => {
@@ -33,17 +33,17 @@ describe('MessageService', () => {
   });
 
   // --- findMessagesByConversationId ---
-  describe('findMessagesByConversationId', () => {
-    it('should fetch messages for a given conversation ID, ordered by timestamp', async () => {
-      const conversationId = 'conv_abc_123';
+  describe("findMessagesByConversationId", () => {
+    it("should fetch messages for a given conversation ID, ordered by timestamp", async () => {
+      const conversationId = "conv_abc_123";
       const mockMessages = [
         createMockMessage({
           conversationId,
-          timestamp: new Date('2023-01-01T10:00:00Z'),
+          timestamp: new Date("2023-01-01T10:00:00Z"),
         }),
         createMockMessage({
           conversationId,
-          timestamp: new Date('2023-01-01T10:05:00Z'),
+          timestamp: new Date("2023-01-01T10:05:00Z"),
         }),
       ];
       (prisma.message.findMany as Mock).mockResolvedValue(mockMessages);
@@ -53,14 +53,14 @@ describe('MessageService', () => {
 
       expect(prisma.message.findMany).toHaveBeenCalledWith({
         where: { conversationId: conversationId },
-        orderBy: { timestamp: 'asc' },
+        orderBy: { timestamp: "asc" },
       });
       expect(messages).toEqual(mockMessages);
       expect(messages.length).toBe(2);
     });
 
-    it('should return an empty array if no messages are found for the conversation', async () => {
-      const conversationId = 'conv_empty_456';
+    it("should return an empty array if no messages are found for the conversation", async () => {
+      const conversationId = "conv_empty_456";
       (prisma.message.findMany as Mock).mockResolvedValue([]);
 
       const messages =
@@ -68,14 +68,14 @@ describe('MessageService', () => {
 
       expect(prisma.message.findMany).toHaveBeenCalledWith({
         where: { conversationId: conversationId },
-        orderBy: { timestamp: 'asc' },
+        orderBy: { timestamp: "asc" },
       });
       expect(messages).toEqual([]);
     });
 
-    it('should log fetching attempt', async () => {
-      const conversationId = 'conv_log_test_789';
-      const consoleSpy = vi.spyOn(console, 'log');
+    it("should log fetching attempt", async () => {
+      const conversationId = "conv_log_test_789";
+      const consoleSpy = vi.spyOn(console, "log");
       (prisma.message.findMany as Mock).mockResolvedValue([]);
 
       await messageService.findMessagesByConversationId(conversationId);
@@ -88,12 +88,12 @@ describe('MessageService', () => {
   });
 
   // --- createMessage ---
-  describe('createMessage', () => {
-    const conversationId = 'conv_xyz_789';
+  describe("createMessage", () => {
+    const conversationId = "conv_xyz_789";
 
-    it('should create a new user message', async () => {
+    it("should create a new user message", async () => {
       const isUser = true;
-      const parts = createMockParts('User says hi');
+      const parts = createMockParts("User says hi");
       const expectedMessageData = {
         conversationId: conversationId,
         isUser: isUser,
@@ -116,9 +116,9 @@ describe('MessageService', () => {
       expect(message.parts).toBe(JSON.stringify(parts));
     });
 
-    it('should create a new model message', async () => {
+    it("should create a new model message", async () => {
       const isUser = false;
-      const parts = createMockParts('Model responds');
+      const parts = createMockParts("Model responds");
       const expectedMessageData = {
         conversationId: conversationId,
         isUser: isUser,
@@ -140,9 +140,9 @@ describe('MessageService', () => {
       expect(message.isUser).toBe(false);
     });
 
-    it('should correctly stringify the parts array', async () => {
+    it("should correctly stringify the parts array", async () => {
       const isUser = true;
-      const parts: Part[] = [{ text: 'First part.' }, { text: 'Second part.' }];
+      const parts: Part[] = [{ text: "First part." }, { text: "Second part." }];
       const expectedMessageData = {
         conversationId: conversationId,
         isUser: isUser,
@@ -162,8 +162,8 @@ describe('MessageService', () => {
       );
     });
 
-    it('should log message creation attempt', async () => {
-      const consoleSpy = vi.spyOn(console, 'log');
+    it("should log message creation attempt", async () => {
+      const consoleSpy = vi.spyOn(console, "log");
       const parts = createMockParts();
       const mockCreatedMessage = createMockMessage();
       (prisma.message.create as Mock).mockResolvedValue(mockCreatedMessage);

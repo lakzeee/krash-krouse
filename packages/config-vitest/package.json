@@ -1,0 +1,9 @@
+{
+  "name": "@repo/config-vitest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./next": "./next.js"
+  }
+}

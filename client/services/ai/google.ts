@@ -40,4 +40,19 @@ export async function getLearningObjective(messages: Part[]) {
   };
 
   const model = 'gemini-2.5-flash-preview-05-20';
+
+  const contents = [
+    {
+      role: 'user',
+      parts: messages,
+    },
+  ];
+
+  const response = await ai.models.generateContent({
+    model,
+    config,
+    contents,
+  });
+
+  return response.text;
 }

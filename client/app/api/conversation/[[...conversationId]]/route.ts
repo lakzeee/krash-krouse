@@ -12,7 +12,12 @@ import {
   OptionalRouteSegmenetSchema,
   RequiredRouteSegmenetSchema,
 } from '@/lib/zod';
-import { NewCourseRequestBody, NewCourseRequestBodySchema } from '@/types/api';
+import {
+  NewCourseRequestBody,
+  NewCourseRequestBodySchema,
+  UpdateConversationRequestBody,
+  UpdateConversationRequestBodySchema,
+} from '@/types/api';
 
 /**
  * @swagger
@@ -222,5 +227,20 @@ export const PUT = withRouteErrorHandling(
     const { conversationId } = await params;
 
     const conversationService = new ConversationService();
+
+    const conversation = await conversationService.findConversationById(
+      userId,
+      conversationId[0]
+    );
+
+    if (!conversation) {
+      throw new NotFoundError('Conversation not found');
+    }
+
+    const body: UpdateConversationRequestBody = await request.json();
+    const parsedBody = UpdateConversationRequestBodySchema.parse(body);
+
+    if (parsedBody.action === 'learning-objective') {
+    }
   }
 );

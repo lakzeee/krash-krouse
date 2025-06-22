@@ -33,6 +33,9 @@ export class ConversationService {
 
     return prisma.conversation.findUnique({
       where: { id: conversationId, userId: userId },
+      include: {
+        messages: true,
+      },
     });
   }
 

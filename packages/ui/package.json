@@ -1,0 +1,12 @@
+{
+  "name": "@repo/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@repo/config-eslint": "workspace:*",
+    "@repo/config-prettier": "workspace:*",
+    "@repo/config-typescript": "workspace:*",
+    "@repo/config-vitest": "workspace:*"
+  }
+}

@@ -16,6 +16,7 @@ export default defineConfig({
         "**/prisma.ts",
         "components/ui/**",
         "**/index.ts",
+        "types/**",
         ...coverageConfigDefaults.exclude,
       ],
     },
